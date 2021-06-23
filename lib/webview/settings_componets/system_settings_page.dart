@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../main_screen/settings_list_tile.dart';
+import 'package:pos/controller/settings_controller.dart';
+import 'package:pos/webview/components/header_container.dart';
+import 'package:pos/webview/components/settings_listtile_webview.dart';
+
+import 'package:provider/provider.dart';
 
 class SystemSettingsPage extends StatelessWidget {
   final Function onSystemSettingsIndexChanged;
@@ -10,187 +14,64 @@ class SystemSettingsPage extends StatelessWidget {
     this.onSystemSettingsIndexChanged,
     this.selectedSystemIndex,
   );
-
   Widget build(BuildContext context) {
+    var _controller = Provider.of<SettingController>(context);
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
       ),
       height: 580,
-      child: ListView(
+      child: Column(
         children: [
-          systemSettingsHeader(),
-          Material(
-            color: Colors.transparent,
-            child: SettingsListTile(
-              tittle: 'Features',
-              style: TextStyle(
-                fontSize: 15,
-              ),
-              color: selectedSystemIndex == 0
-                  ? Color(0xffF0F0F0)
-                  : Colors.transparent,
-              press: () {
-                onSystemSettingsIndexChanged(0);
-              },
-            ),
-          ),
-          bottomLineDiver(),
-          Material(
-            color: Colors.transparent,
-            child: SettingsListTile(
-              tittle: 'Billing & Subscription',
-              style: TextStyle(
-                fontSize: 15,
-              ),
-              color: selectedSystemIndex == 1
-                  ? Color(0xffF0F0F0)
-                  : Colors.transparent,
-              press: () {
-                onSystemSettingsIndexChanged(1);
-              },
-            ),
-          ),
-          bottomLineDiver(),
-          Material(
-            color: Colors.transparent,
-            child: SettingsListTile(
-              tittle: 'Payment',
-              style: TextStyle(
-                fontSize: 15,
-              ),
-              color: selectedSystemIndex == 2
-                  ? Color(0xffF0F0F0)
-                  : Colors.transparent,
-              press: () {
-                onSystemSettingsIndexChanged(2);
-              },
-            ),
-          ),
-          bottomLineDiver(),
-          Material(
-            color: Colors.transparent,
-            child: SettingsListTile(
-              tittle: 'Loayality',
-              style: TextStyle(
-                fontSize: 15,
-              ),
-              color: selectedSystemIndex == 3
-                  ? Color(0xffF0F0F0)
-                  : Colors.transparent,
-              press: () {
-                onSystemSettingsIndexChanged(3);
-              },
-            ),
-          ),
-          bottomLineDiver(),
-          Material(
-            color: Colors.transparent,
-            child: SettingsListTile(
-              tittle: 'Taxes',
-              style: TextStyle(
-                fontSize: 15,
-              ),
-              color: selectedSystemIndex == 4
-                  ? Color(0xffF0F0F0)
-                  : Colors.transparent,
-              press: () {
-                onSystemSettingsIndexChanged(4);
-              },
-            ),
-          ),
-          bottomLineDiver(),
-          Material(
-            color: Colors.transparent,
-            child: SettingsListTile(
-              tittle: 'Reciept',
-              style: TextStyle(
-                fontSize: 15,
-              ),
-              color: selectedSystemIndex == 5
-                  ? Color(0xffF0F0F0)
-                  : Colors.transparent,
-              press: () {
-                onSystemSettingsIndexChanged(5);
-              },
-            ),
-          ),
-          bottomLineDiver(),
-          Material(
-            color: Colors.transparent,
-            child: SettingsListTile(
-              tittle: 'Dining Option',
-              style: TextStyle(
-                fontSize: 15,
-              ),
-              color: selectedSystemIndex == 6
-                  ? Color(0xffF0F0F0)
-                  : Colors.transparent,
-              press: () {
-                onSystemSettingsIndexChanged(6);
-              },
-            ),
+          HeaderContainer(title: 'System Settings'),
+          ListView.separated(
+            shrinkWrap: true,
+            primary: false,
+            itemCount: _controller.systemSettingList.length,
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  SettingTileListWeb(
+                    title: _controller.systemSettingList[index]['title'],
+                    press: () {
+                      onSystemSettingsIndexChanged(index);
+                    },
+                    color: selectedSystemIndex == index
+                        ? Color(0xffF0F0F0)
+                        : Colors.transparent,
+                  ),
+                ],
+              );
+            },
+            separatorBuilder: (context, index) => bottomLineDiver(),
           ),
           Divider(
             height: 0.5,
             color: Color(0xffE0E0E0),
           ),
-          posSettingsHeader(),
-          Material(
-            color: Colors.transparent,
-            child: SettingsListTile(
-              tittle: 'Stores',
-              style: TextStyle(
-                fontSize: 15,
-              ),
-              color: selectedSystemIndex == 7
-                  ? Color(0xffF0F0F0)
-                  : Colors.transparent,
-              press: () {
-                onSystemSettingsIndexChanged(7);
-              },
-            ),
+          HeaderContainer(title: 'POS Settings'),
+          bottomLineDiver(),
+          SettingTileListWeb(
+            title: _controller.posSettingList[0]['title'],
+            color: selectedSystemIndex == 7
+                ? Color(0xffF0F0F0)
+                : Colors.transparent,
+            press: () {
+              onSystemSettingsIndexChanged(7);
+            },
           ),
           bottomLineDiver(),
-          Material(
-            color: Colors.transparent,
-            child: SettingsListTile(
-              tittle: 'POS Devices',
-              style: TextStyle(
-                fontSize: 15,
-              ),
-              color: selectedSystemIndex == 8
-                  ? Color(0xffF0F0F0)
-                  : Colors.transparent,
-              press: () {
-                onSystemSettingsIndexChanged(8);
-              },
-            ),
+          SettingTileListWeb(
+            title: _controller.posSettingList[1]['title'],
+            color: selectedSystemIndex == 8
+                ? Color(0xffF0F0F0)
+                : Colors.transparent,
+            press: () {
+              onSystemSettingsIndexChanged(8);
+            },
           ),
         ],
-      ),
-    );
-  }
-
-  Container posSettingsHeader() {
-    return Container(
-      padding: EdgeInsets.only(left: 18, top: 16, bottom: 10),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Color(0xffE0E0E0),
-          ),
-        ),
-      ),
-      child: Text(
-        'POS Settings',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
       ),
     );
   }
@@ -201,28 +82,6 @@ class SystemSettingsPage extends StatelessWidget {
       child: Divider(
         height: 0.5,
         color: Color(0xffE0E0E0),
-      ),
-    );
-  }
-
-  Container systemSettingsHeader() {
-    return Container(
-      padding: EdgeInsets.only(left: 18, top: 16, bottom: 10),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Color(0xffE0E0E0),
-          ),
-        ),
-      ),
-      child: Text(
-        'System Settings',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
       ),
     );
   }

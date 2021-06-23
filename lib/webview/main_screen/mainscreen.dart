@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pos/components/responsive_screen.dart';
+import 'package:pos/controller/sidenav_controller.dart';
+
 import 'package:pos/webview/main_screen/sidemenu.dart';
+import 'package:provider/provider.dart';
 
 import '../settings_componets/settings_screen.dart';
 
@@ -15,16 +19,26 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SideMenu((int index) {
+        setState(() {
+          selectedIndex = index;
+        });
+      }, selectedIndex),
+      key: Provider.of<SideNavController>(context, listen: false).scafoldKey,
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            //passing function
-            child: SideMenu((int index) {
-              setState(() {
-                selectedIndex = index;
-              });
-            }, selectedIndex),
-          ),
+          //only shows in desktop
+          if (ResponsiveScreen.isdesktop(context))
+            Expanded(
+              //passing function
+
+              child: SideMenu((int index) {
+                setState(() {
+                  selectedIndex = index;
+                });
+              }, selectedIndex),
+            ),
           Expanded(
             flex: 5,
             child: Container(
