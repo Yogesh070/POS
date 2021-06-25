@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:pos/screens/features.dart';
+import 'package:pos/screens/payment.dart';
 
 class SettingController extends ChangeNotifier {
   bool settingScreenFlag = false;
@@ -34,7 +35,7 @@ class SettingController extends ChangeNotifier {
     },
     {
       "title": "Payment",
-      "route": FeaturesScreen(),
+      "route": PaymentScreen(),
     },
     {
       "title": "Loyalty",
