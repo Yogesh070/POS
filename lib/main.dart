@@ -7,6 +7,8 @@ import 'package:pos/webview/main_screen/mainscreen.dart';
 
 import 'package:provider/provider.dart';
 
+import 'controller/payment_controller.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => SideNavController(),
         ),
+        ChangeNotifierProvider(create: (_) => PaymentNotifier()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
