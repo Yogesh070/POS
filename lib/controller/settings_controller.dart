@@ -119,7 +119,43 @@ class SettingController extends ChangeNotifier {
       isOn: false,
     ),
   ];
+
+  /*------------------- Tax Option List ---------------------*/
+
+  List<TaxOption> _taxs = [
+    TaxOption(taxName: 'VAT'),
+    TaxOption(taxName: 'Service Charge'),
+  ];
+  void updateTax(TaxOption taxOption) {
+    taxOption.toogleAdded();
+    notifyListeners();
+  }
+
+  void addTax(String newTaxTitle) {
+    final tax = TaxOption(taxName: newTaxTitle);
+    _taxs.add(tax);
+    notifyListeners();
+  }
+
+  void removeTax(TaxOption taxOption) {
+    if (taxOption.isAdded == true) {
+      _taxs.remove(taxOption);
+      print('deleted');
+      notifyListeners();
+    } else {
+      print('not deleted');
+      notifyListeners();
+    }
+  }
+
+  UnmodifiableListView<TaxOption> get taxs => UnmodifiableListView(_taxs);
+
+  void deleteTax(TaxOption taxOption) {
+    _taxs.remove(taxOption);
+    notifyListeners();
+  }
 }
+/*------------------- Tax Option List Ending  ---------------------*/
 
 class FeatureOption {
   String? title;
@@ -127,4 +163,15 @@ class FeatureOption {
   bool? isOn;
 
   FeatureOption({this.title, this.subtitle, this.isOn});
+}
+
+class TaxOption {
+  String? taxName;
+  bool? isAdded;
+
+  TaxOption({this.taxName, this.isAdded = false});
+
+  void toogleAdded() {
+    isAdded = !isAdded!;
+  }
 }

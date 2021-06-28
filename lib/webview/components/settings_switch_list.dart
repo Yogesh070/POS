@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pos/screens/loyality.dart';
+import 'package:pos/screens/tax.dart';
 import 'package:pos/webview/settings_componets/features_page.dart';
 
 class SettingsSwitchList extends StatelessWidget {
@@ -19,11 +21,11 @@ class SettingsSwitchList extends StatelessWidget {
           case 1:
             return Center(child: Text('Billing & Subscription'));
           case 2:
-            return Center(child: Text('sd'));
+            return Center(child: Text('Payment'));
           case 3:
-            return Center(child: Text('Loyality'));
+            return LoyalityScreen();
           case 4:
-            return Center(child: Text('Taxes'));
+            return TaxScreen();
           case 5:
             return Center(child: Text('Reciept'));
           case 6:
