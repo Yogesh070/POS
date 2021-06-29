@@ -59,39 +59,34 @@ class _TaxScreenState extends State<TaxScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 7),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Color(0xffE0E0E0),
+          HeaderContainer(
+            title: 'Taxes',
+            actions: [
+              IconButton(
+                onPressed: () {
+                  var _controller =
+                      Provider.of<SettingController>(context, listen: false);
+                  _controller.removeTax(_controller.taxs[selectedIndex]);
+                },
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.red,
                 ),
               ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Tax',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    )),
-                AddButtonHeader(
-                  buttonOnTap: () {
-                    pageController.animateToPage(1,
-                        duration: Duration(milliseconds: 400),
-                        curve: Curves.ease);
-                  },
-                  iconOnTap: () {
-                    var _controller =
-                        Provider.of<SettingController>(context, listen: false);
-                    _controller.removeTax(_controller.taxs[selectedIndex]);
-                  },
+              PrimaryButton(
+                title: 'Add New',
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                onPressed: () {
+                  pageController.animateToPage(1,
+                      duration: Duration(milliseconds: 400),
+                      curve: Curves.ease);
+                },
+                icon: Icon(
+                  Icons.add,
+                  size: 16,
                 ),
-              ],
-            ),
+              )
+            ],
           ),
           Expanded(
             child: SingleChildScrollView(
