@@ -21,6 +21,7 @@ class SecondaryButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           icon ?? SizedBox.shrink(),
           (icon != null)
