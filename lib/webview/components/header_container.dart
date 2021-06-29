@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 class HeaderContainer extends StatelessWidget {
   final String title;
+  final List<Widget>? actions;
 
-  const HeaderContainer({Key? key, required this.title}) : super(key: key);
+  const HeaderContainer({Key? key, required this.title, this.actions})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 18, top: 16, bottom: 10),
+      padding: EdgeInsets.only(left: 16, top: 16, bottom: 10, right: 16),
       width: double.infinity,
       decoration: BoxDecoration(
         border: Border(
@@ -17,13 +19,21 @@ class HeaderContainer extends StatelessWidget {
           ),
         ),
       ),
-      child: Text(
-        title,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Row(
+            children: actions ?? [Container()],
+          )
+        ],
       ),
     );
   }
