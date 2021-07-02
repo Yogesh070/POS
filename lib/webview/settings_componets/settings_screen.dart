@@ -84,6 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           top: 40,
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: SystemSettingsPage((int index) {

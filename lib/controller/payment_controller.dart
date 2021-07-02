@@ -6,6 +6,7 @@ class PaymentNotifier extends ChangeNotifier {
   List<PaymentModel> _paymentList = [];
   UnmodifiableListView<PaymentModel> get paymentDetail =>
       UnmodifiableListView(_paymentList);
+  // ignore: unused_field
   PaymentModel? _selectedPayment;
 
   addPayment(PaymentModel paymentModel) {

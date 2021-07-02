@@ -74,25 +74,23 @@ class _FeaturesPageState extends State<FeaturesPage> {
               ],
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 50.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SecondaryButton(
-                    title: 'Cancel',
-                    onPressed: () {},
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  PrimaryButton(
-                    title: 'Save',
-                    onPressed: () {},
-                  ),
-                ],
-              ),
+          Padding(
+            padding: const EdgeInsets.only(right: 50.0, bottom: 32),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SecondaryButton(
+                  title: 'Cancel',
+                  onPressed: () {},
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                PrimaryButton(
+                  title: 'Save',
+                  onPressed: () {},
+                ),
+              ],
             ),
           ),
         ],
