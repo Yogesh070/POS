@@ -1,8 +1,11 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:pos/model/diningModel.dart';
+import 'package:pos/screens/dining.dart';
 import 'package:pos/screens/features.dart';
 import 'package:pos/screens/payment.dart';
+import 'package:pos/screens/receipt.dart';
 
 class SettingController extends ChangeNotifier {
   bool settingScreenFlag = false;
@@ -47,11 +50,11 @@ class SettingController extends ChangeNotifier {
     },
     {
       "title": "Receipt",
-      "route": FeaturesScreen(),
+      "route": ReceiptScreen(),
     },
     {
       "title": "Dining Option",
-      "route": FeaturesScreen(),
+      "route": DiningScreen(),
     },
     // "Features",
     // "Billing & Subscription",
@@ -165,7 +168,15 @@ class FeatureOption {
 
   FeatureOption({this.title, this.subtitle, this.isOn});
 }
+class DiningNotifier extends ChangeNotifier {
+  List<DiningModel> _diningList = [];
+  UnmodifiableListView<DiningModel> get diningDetail =>
+      UnmodifiableListView(_diningList);
 
+  addDining(DiningModel diningModel) {
+    _diningList.add(diningModel);
+    notifyListeners();
+=======
 class TaxOption {
   String? taxName;
   bool? isAdded;

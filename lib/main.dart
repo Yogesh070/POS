@@ -22,7 +22,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => SideNavController(),
         ),
-        ChangeNotifierProvider(create: (_) => PaymentNotifier()),
+        ChangeNotifierProvider(
+          create: (_) => DiningNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PaymentNotifier(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
