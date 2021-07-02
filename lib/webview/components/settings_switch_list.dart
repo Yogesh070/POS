@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pos/screens/loyality.dart';
-import 'package:pos/screens/payment.dart';
 import 'package:pos/screens/payment_large.dart';
 import 'package:pos/screens/tax.dart';
 import 'package:pos/webview/settings_componets/features_page.dart';
