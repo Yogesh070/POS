@@ -75,11 +75,10 @@ class SettingList extends StatelessWidget {
                         onTap: () {
                           print(item['title']);
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => item['route'],
-                            ),
-                          );
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => item['route'],
+                              ));
                         },
                       ),
                       Divider(

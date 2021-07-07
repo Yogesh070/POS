@@ -3,9 +3,18 @@ import 'package:flutter/material.dart';
 class PrimaryButton extends StatelessWidget {
   final String? title;
   final VoidCallback? onPressed;
+  final Icon? icon;
+  final double? horizontalIconSpace;
+  final EdgeInsets? padding;
 
-  const PrimaryButton({Key? key, required this.title, required this.onPressed})
-      : super(key: key);
+  const PrimaryButton({
+    Key? key,
+    required this.title,
+    required this.onPressed,
+    this.horizontalIconSpace = 4,
+    this.icon,
+    this.padding,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +23,22 @@ class PrimaryButton extends StatelessWidget {
         backgroundColor: MaterialStateProperty.all(Color(0XFF30B700)),
         foregroundColor: MaterialStateProperty.all(Colors.white),
         padding: MaterialStateProperty.all(
-          EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+          padding ?? EdgeInsets.symmetric(horizontal: 24, vertical: 8),
         ),
       ),
       onPressed: onPressed,
-      child: Text(title!),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          icon ?? SizedBox.shrink(),
+          (icon != null)
+              ? SizedBox(
+                  width: horizontalIconSpace,
+                )
+              : SizedBox.shrink(),
+          Text(title!),
+        ],
+      ),
     );
   }
 }
