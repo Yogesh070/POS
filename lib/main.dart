@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pos/controller/settings_controller.dart';
+import 'package:pos/controller/storesController.dart';
 import 'package:pos/controller/sidenav_controller.dart';
 import 'package:pos/screens/settings.dart';
-
 import 'package:pos/webview/main_screen/mainscreen.dart';
-
 import 'package:provider/provider.dart';
-
 import 'controller/payment_controller.dart';
 
 void main() => runApp(MyApp());
@@ -27,6 +25,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => PaymentNotifier(),
+        ),
+          ChangeNotifierProvider(
+          create: (_) => StoreController(),
         ),
       ],
       child: MaterialApp(
