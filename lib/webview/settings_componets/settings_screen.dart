@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pos/webview/settings_componets/features_page.dart';
+import 'package:pos/components/responsive_screen.dart';
+import 'package:pos/controller/sidenav_controller.dart';
+import 'package:pos/webview/components/settings_switch_list.dart';
+
 import 'package:pos/webview/settings_componets/system_settings_page.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -28,14 +32,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
           child: AppBar(
+            leading: (!ResponsiveScreen.isdesktop(context))
+                ? IconButton(
+                    onPressed: () {
+                      Provider.of<SideNavController>(context, listen: false)
+                          .controlNavBar();
+                    },
+                    icon: Icon(Icons.menu),
+                    color: Colors.black,
+                  )
+                : null,
             title: Text(
               'Settings',
               style: TextStyle(
                 fontFamily: 'Roboto-Medium',
                 fontSize: 20,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 48.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Ram Thapa',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        color: Color(0xff707070),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -48,6 +84,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           top: 40,
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: SystemSettingsPage((int index) {
@@ -60,32 +97,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               width: 50,
             ),
             Expanded(
-              child: Builder(
-                builder: (context) {
-                  switch (selectedSettingsindex) {
-                    case 0:
-                      return FeaturesPage();
-                    case 1:
-                      return Center(child: Text('Billing & Subscription'));
-                    case 2:
-                      return Center(child: Text('Payment'));
-                    case 3:
-                      return Center(child: Text('Loyality'));
-                    case 4:
-                      return Center(child: Text('Taxes'));
-                    case 5:
-                      return Center(child: Text('Reciept'));
-                    case 6:
-                      return Center(child: Text('Dining Option'));
-                    case 7:
-                      return Center(child: Text('Stores'));
-                    case 8:
-                      return Center(child: Text('POS Devices'));
-                    default:
-                  }
-                  return Container();
-                },
-              ),
+              child: SettingsSwitchList(
+                  selectedSettingsindex: selectedSettingsindex),
             ),
           ],
         ),
