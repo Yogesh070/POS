@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pos/components/custom_color_button.dart';
+import 'package:pos/components/primary_button.dart';
+import 'package:pos/components/secondary_button.dart';
 import 'package:pos/controller/storesController.dart';
 import 'package:provider/provider.dart';
 
@@ -77,13 +78,12 @@ class _StoresScreenState extends State<StoresScreen> {
                     ),
                   ),
                   actions: [
-                    CustomButton(
+                    SecondaryButton(
                         title: "Cancel",
                         onPressed: () {
                           Navigator.of(context).pop();
-                        },
-                        color: Colors.grey),
-                    CustomButton(
+                        }),
+                    PrimaryButton(
                         title: "Save",
                         onPressed: () {
                           _storeController.addItemInTheList(
@@ -91,8 +91,7 @@ class _StoresScreenState extends State<StoresScreen> {
                               _locationController.text,
                               _contactController.text);
                           Navigator.of(context).pop();
-                        },
-                        color: Colors.green),
+                        })
                   ],
                 );
               });
