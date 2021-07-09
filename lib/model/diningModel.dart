@@ -1,6 +1,6 @@
 class DiningModel {
   String diningName;
-  bool isOn;
+  bool isSelected;
 
-  DiningModel(this.diningName, this.isOn);
+  DiningModel(this.diningName, this.isSelected);
 }
