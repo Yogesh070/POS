@@ -181,13 +181,37 @@ class FeatureOption {
   FeatureOption({this.title, this.subtitle, this.isOn});
 }
 
+/*------------------- Adding Dining List ---------------------*/
+
 class DiningNotifier extends ChangeNotifier {
   List<DiningModel> _diningList = [];
   UnmodifiableListView<DiningModel> get diningDetail =>
       UnmodifiableListView(_diningList);
+  DiningModel? _selectedDining;
+  DiningModel? get selectedDining => _selectedDining;
 
   addDining(DiningModel diningModel) {
     _diningList.add(diningModel);
     notifyListeners();
+  }
+
+  void selectSingleCheckBox(bool val, int index) {
+    for (DiningModel items in _diningList) {
+      items.isSelected = false;
+    }
+    _diningList[index].isSelected = val;
+    _selectedDining = _diningList[index];
+    print(_selectedDining!.diningName);
+    notifyListeners();
+  }
+
+  void removeDining(DiningModel diningModel) {
+    if (diningModel.isSelected == true) {
+      _diningList.remove(diningModel);
+      print('deleted');
+      notifyListeners();
+    } else {
+      print('not deleted');
+    }
   }
 }
