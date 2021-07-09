@@ -151,7 +151,8 @@ class _DiningAlertDialogeComponentState
                 title: 'Save',
                 onPressed: () {
                   diningNotifier.addDining(
-                    DiningModel(_diningName.text),
+                    DiningModel(_diningName.text,false),
+                    
                   );
                   Navigator.pop(context);
                 },
