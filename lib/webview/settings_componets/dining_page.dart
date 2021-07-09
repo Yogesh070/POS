@@ -18,7 +18,6 @@ class DiningPage extends StatefulWidget {
 PageController pageController = PageController();
 final TextEditingController _diningName = TextEditingController();
 bool _validate = false;
-int selectedIndex = 0;
 
 class _DiningPageState extends State<DiningPage> {
   @override
@@ -60,8 +59,7 @@ class _DiningPageState extends State<DiningPage> {
                 onPressed: () {
                   var _controller =
                       Provider.of<DiningNotifier>(context, listen: false);
-                  _controller
-                      .removeDining(_controller.diningDetail[selectedIndex]);
+                  _controller.removeDining(_controller.selectedDining!);
                 },
                 icon: Icon(
                   Icons.delete,
@@ -100,7 +98,8 @@ class _DiningPageState extends State<DiningPage> {
                               Row(
                                 children: [
                                   Checkbox(
-                                    value: notifier.diningDetail[index].isOn,
+                                    value:
+                                        notifier.diningDetail[index].isSelected,
                                     activeColor: Color(0xff30B700),
                                     onChanged: (value) {
                                       notifier.selectSingleCheckBox(
@@ -197,6 +196,7 @@ class _DiningPageState extends State<DiningPage> {
                               print('error');
                             }
                           });
+                          _diningName.clear();
                         },
                       ),
                     ],
