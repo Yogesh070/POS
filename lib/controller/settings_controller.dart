@@ -188,6 +188,7 @@ class DiningNotifier extends ChangeNotifier {
   UnmodifiableListView<DiningModel> get diningDetail =>
       UnmodifiableListView(_diningList);
   DiningModel? _selectedDining;
+  DiningModel? get selectedDining => _selectedDining;
 
   addDining(DiningModel diningModel) {
     _diningList.add(diningModel);
@@ -196,22 +197,21 @@ class DiningNotifier extends ChangeNotifier {
 
   void selectSingleCheckBox(bool val, int index) {
     for (DiningModel items in _diningList) {
-      items.isOn = false;
+      items.isSelected = false;
     }
-    _diningList[index].isOn = val;
+    _diningList[index].isSelected = val;
     _selectedDining = _diningList[index];
-    // print(_selectedDining!.diningName);
+    print(_selectedDining!.diningName);
     notifyListeners();
   }
 
   void removeDining(DiningModel diningModel) {
-    if (diningModel.isOn == true) {
+    if (diningModel.isSelected == true) {
       _diningList.remove(diningModel);
       print('deleted');
       notifyListeners();
     } else {
       print('not deleted');
-      notifyListeners();
     }
   }
 }
