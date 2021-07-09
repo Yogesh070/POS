@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pos/components/primary_button.dart';
+import 'package:pos/components/secondary_button.dart';
 import 'package:pos/controller/storesController.dart';
 import 'package:provider/provider.dart';
 
@@ -8,13 +10,6 @@ class StoresScreen extends StatefulWidget {
 }
 
 class _StoresScreenState extends State<StoresScreen> {
-  List addNewHintList = [
-    "Enter name eg:Star Lounge",
-    "Location",
-    "Contact No",
-    "Description",
-  ];
-  String newValue = '';
   final _nameController = TextEditingController();
 
   final _locationController = TextEditingController();
@@ -83,26 +78,20 @@ class _StoresScreenState extends State<StoresScreen> {
                     ),
                   ),
                   actions: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.grey,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("Cancel"),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                      ),
-                      onPressed: () {
-                        _storeController.addItemInTheList(_nameController.text,
-                            _locationController.text, _contactController.text);
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("Save"),
-                    ),
+                    SecondaryButton(
+                        title: "Cancel",
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        }),
+                    PrimaryButton(
+                        title: "Save",
+                        onPressed: () {
+                          _storeController.addItemInTheList(
+                              _nameController.text,
+                              _locationController.text,
+                              _contactController.text);
+                          Navigator.of(context).pop();
+                        })
                   ],
                 );
               });
@@ -144,11 +133,9 @@ class StoreBody extends StatelessWidget {
         },
         border: TableBorder(
             bottom: BorderSide(
-              color: Colors.grey,
+              color: Colors.grey.shade200,
             ),
-            horizontalInside: BorderSide(
-              color: Colors.grey,
-            )),
+            horizontalInside: BorderSide(color: Colors.grey.shade200)),
         children: [
           TableRow(
             children: [
