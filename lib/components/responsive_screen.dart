@@ -18,11 +18,11 @@ class ResponsiveScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    // final Size size = MediaQuery.of(context).size;
 
     if (isdesktop(context)) {
       return desktop;
-    } else if (isTablet(context) && tablet != null) {
+    } else if (isTablet(context)) {
       return tablet;
     } else {
       return mobile;

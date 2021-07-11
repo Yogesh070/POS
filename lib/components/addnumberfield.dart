@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-class AddTextField extends StatelessWidget {
+class AddNumberField extends StatelessWidget {
   final String hintText;
   final String? validateText;
   final TextEditingController? textEditingController;
   final Function(String)? onChanged;
-
-  const AddTextField({
+  const AddNumberField({
     Key? key,
     required this.hintText,
     this.textEditingController,
@@ -20,7 +19,7 @@ class AddTextField extends StatelessWidget {
       controller: textEditingController,
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Please enter required name';
+          return 'Please enter required value';
         }
       },
       decoration: InputDecoration(
@@ -31,6 +30,7 @@ class AddTextField extends StatelessWidget {
         //labelText: 'Enter the Value',
         errorText: validateText,
       ),
+      keyboardType: TextInputType.number,
       onChanged: onChanged,
     );
   }

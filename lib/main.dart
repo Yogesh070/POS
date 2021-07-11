@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pos/controller/settings_controller.dart';
 import 'package:pos/controller/sidenav_controller.dart';
 import 'package:pos/screens/settings.dart';
-
 import 'package:pos/webview/main_screen/mainscreen.dart';
-
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());

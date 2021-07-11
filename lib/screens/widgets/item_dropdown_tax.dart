@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class ItemDropDownTax extends StatelessWidget {
   var listItemSelected = 'Apply tax to new items';
   var listItem = ['Apply tax to new items', 'Item 2', 'Item 3'];

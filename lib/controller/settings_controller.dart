@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:pos/screens/features.dart';
+import 'package:pos/screens/loayalityscreen/mobile_loyality_screen.dart';
+import 'package:pos/screens/taxloyalityscreen/mobile_tax_screen.dart';
 
 class SettingController extends ChangeNotifier {
   bool settingScreenFlag = false;
@@ -38,11 +40,11 @@ class SettingController extends ChangeNotifier {
     },
     {
       "title": "Loyalty",
-      "route": FeaturesScreen(),
+      "route": MobileLoyalityScreen(),
     },
     {
       "title": "Taxes",
-      "route": FeaturesScreen(),
+      "route": MobileTaxScreen(),
     },
     {
       "title": "Receipt",
@@ -123,8 +125,14 @@ class SettingController extends ChangeNotifier {
   /*------------------- Tax Option List ---------------------*/
 
   List<TaxOption> _taxs = [
-    TaxOption(taxName: 'VAT'),
-    TaxOption(taxName: 'Service Charge'),
+    TaxOption(
+      taxName: 'VAT',
+      taxCharged: '13',
+    ),
+    TaxOption(
+      taxName: 'Service Charge',
+      taxCharged: '10',
+    ),
   ];
   void updateTax(TaxOption taxOption) {
     taxOption.toogleAdded();
@@ -133,6 +141,20 @@ class SettingController extends ChangeNotifier {
 
   void addTax(String newTaxTitle) {
     final tax = TaxOption(taxName: newTaxTitle);
+    _taxs.add(tax);
+    notifyListeners();
+  }
+
+  void addCharge(String newTaxCharge) {
+    final tax = TaxOption(taxCharged: newTaxCharge);
+    _taxs.add(tax);
+    notifyListeners();
+  }
+
+//for adding tax and charge rate in tax screen of mobile
+
+  void addMobileTax(String newTaxTitle, String newTaxCharge) {
+    final tax = TaxOption(taxName: newTaxTitle, taxCharged: newTaxCharge);
     _taxs.add(tax);
     notifyListeners();
   }
@@ -149,13 +171,32 @@ class SettingController extends ChangeNotifier {
   }
 
   UnmodifiableListView<TaxOption> get taxs => UnmodifiableListView(_taxs);
+  /*------------------- Tax Option List Ending  ---------------------*/
 
-  void deleteTax(TaxOption taxOption) {
-    _taxs.remove(taxOption);
+  /*------------------- Loyality Option List Starting  ---------------------*/
+  List<LoyalityOption> _loyality = [
+    LoyalityOption(
+      type: 'Frequent visit',
+      bonus: '10',
+    ),
+    // LoyalityOption(
+    //   type: 'Service Charge',
+    //   bonus: '10%',
+    // ),
+  ];
+
+  void addLoyalityMobile(String newLoyalityType, String newLoyalityBonus) {
+    final loyality =
+        LoyalityOption(type: newLoyalityType, bonus: newLoyalityBonus);
+    _loyality.add(loyality);
     notifyListeners();
   }
+
+  UnmodifiableListView<LoyalityOption> get loyality =>
+      UnmodifiableListView(_loyality);
+
+/*------------------- Loyality Option List Ending  ---------------------*/
 }
-/*------------------- Tax Option List Ending  ---------------------*/
 
 class FeatureOption {
   String? title;
@@ -167,11 +208,22 @@ class FeatureOption {
 
 class TaxOption {
   String? taxName;
+  String? taxCharged;
   bool? isAdded;
 
-  TaxOption({this.taxName, this.isAdded = false});
+  TaxOption({this.taxName, this.taxCharged, this.isAdded = false});
 
   void toogleAdded() {
     isAdded = !isAdded!;
   }
+}
+
+class LoyalityOption {
+  String? type;
+  String? bonus;
+
+  LoyalityOption({
+    this.type,
+    this.bonus,
+  });
 }
