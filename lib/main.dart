@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => PaymentNotifier(),
         ),
-          ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (_) => StoreController(),
         ),
       ],

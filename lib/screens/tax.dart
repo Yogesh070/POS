@@ -1,7 +1,8 @@
+import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:pos/components/add_button_header.dart';
 import 'package:pos/components/addtextfield.dart';
 import 'package:pos/components/constrants.dart';
-
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/components/secondary_button.dart';
 import 'package:pos/controller/settings_controller.dart';
@@ -18,38 +19,25 @@ class TaxScreen extends StatefulWidget {
 }
 
 class _TaxScreenState extends State<TaxScreen> {
-  final _taxTextController = TextEditingController();
-
-  bool _validate = false;
-  String? newTaxTitle;
   int selectedIndex = 0;
-
   PageController pageController = PageController();
-
-  @override
-  void dispose() {
-    pageController.dispose();
-    _taxTextController.dispose();
-
-    super.dispose();
-  }
+  final _taxTextController = TextEditingController();
+  String? newTaxTitle;
+  bool _validate = false;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 300,
-      child: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: pageController,
-        children: [
-          showTaxList(context),
-          addNewTax(context),
-        ],
-      ),
+    return ExpandablePageView(
+      physics: NeverScrollableScrollPhysics(),
+      controller: pageController,
+      children: [
+        taxList(context),
+        addNewTax(context),
+      ],
     );
   }
 
-  Container showTaxList(BuildContext context) {
+  Container taxList(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -58,46 +46,45 @@ class _TaxScreenState extends State<TaxScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeaderContainer(
-            title: 'Taxes',
-            actions: [
-              IconButton(
-                onPressed: () {
-                  var _controller =
-                      Provider.of<SettingController>(context, listen: false);
-                  _controller.removeTax(_controller.taxs[selectedIndex]);
-                },
-                icon: Icon(
-                  Icons.delete,
-                  color: Colors.red,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Color(0xffE0E0E0),
                 ),
-              ),
-              PrimaryButton(
-                title: 'Add New',
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                onPressed: () {
-                  pageController.animateToPage(1,
-                      duration: Duration(milliseconds: 400),
-                      curve: Curves.ease);
-                },
-                icon: Icon(
-                  Icons.add,
-                  size: 16,
-                ),
-              )
-            ],
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  TaxesList((int index) {
-                    selectedIndex = index;
-                  }),
-                ],
               ),
             ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Tax',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                AddButtonHeader(
+                  buttonOnTap: () {
+                    pageController.animateToPage(1,
+                        duration: Duration(milliseconds: 400),
+                        curve: Curves.ease);
+                  },
+                  iconOnTap: () {
+                    var _controller =
+                        Provider.of<SettingController>(context, listen: false);
+                    _controller.removeTax(_controller.taxs[selectedIndex]);
+                  },
+                ),
+              ],
+            ),
           ),
+          TaxesList((int index) {
+            selectedIndex = index;
+          }),
         ],
       ),
     );
@@ -151,22 +138,20 @@ class _TaxScreenState extends State<TaxScreen> {
                       SecondaryButton(
                         title: 'Save',
                         onPressed: () {
-                          setState(() {
-                            if (_taxTextController.text.isNotEmpty) {
-                              _validate = false;
-                              Provider.of<SettingController>(
-                                context,
-                                listen: false,
-                              ).addTax(newTaxTitle!);
-                              // taxs.add(TaxOption(taxName: newTaxTitle));
-                              pageController.animateToPage(0,
-                                  duration: Duration(milliseconds: 400),
-                                  curve: Curves.ease);
-                            } else {
-                              _validate = true;
-                              print('error');
-                            }
-                          });
+                          if (_taxTextController.text.isNotEmpty) {
+                            _validate = false;
+                            Provider.of<SettingController>(
+                              context,
+                              listen: false,
+                            ).addTax(newTaxTitle!);
+
+                            pageController.animateToPage(0,
+                                duration: Duration(milliseconds: 400),
+                                curve: Curves.ease);
+                          } else {
+                            _validate = true;
+                            print('error');
+                          }
                         },
                       ),
                     ],
