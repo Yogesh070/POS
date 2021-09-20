@@ -25,7 +25,9 @@ class _StoresScreenState extends State<StoresScreen> {
       appBar: AppBar(
         leading: GestureDetector(
           child: Icon(Icons.arrow_back_ios),
-          onTap: () {},
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
         title: Text(
           "Stores",
