@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pos/components/expandable_sidenav.dart';
+import 'package:pos/components/items_grid_view.dart';
+import 'package:pos/controller/ticket.dart';
 import 'package:pos/screens/add_customer.dart';
-import 'package:pos/screens/items_grid_view.dart';
+import 'package:pos/screens/openticket/tickets_screen.dart';
 import 'package:pos/screens/settings.dart';
 import 'package:pos/utilities/constant.dart';
 import 'package:pos/webview/main_screen/sidemenu.dart';
@@ -449,6 +451,7 @@ class ItemsListView extends StatelessWidget {
 class TicketContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var _controller = Provider.of<TicketProvider>(context);
     return Container(
       // height: 78,
       decoration: BoxDecoration(
@@ -460,17 +463,27 @@ class TicketContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Expanded(
-            child: Column(
-              children: [
-                Text(
-                  'Open Tickets',
-                  style: kSemiLargeText,
-                ),
-                Text(
-                  '21',
-                  style: kSemiLargeText,
-                ),
-              ],
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TicketsScreen(),
+                  ),
+                );
+              },
+              child: Column(
+                children: [
+                  Text(
+                    'Open Tickets',
+                    style: kSemiLargeText,
+                  ),
+                  Text(
+                    '${_controller.openTicketList.length}',
+                    style: kSemiLargeText,
+                  ),
+                ],
+              ),
             ),
           ),
           Expanded(
