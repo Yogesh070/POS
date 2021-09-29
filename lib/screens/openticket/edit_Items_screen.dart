@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pos/components/constrants.dart';
 import 'package:pos/controller/ticket.dart';

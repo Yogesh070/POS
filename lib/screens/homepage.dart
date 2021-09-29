@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pos/components/expandable_sidenav.dart';
 import 'package:pos/components/items_grid_view.dart';
