@@ -11,6 +11,9 @@ import 'package:pos/webview/main_screen/sidemenu.dart';
 import 'package:pos/controller/sidenav_controller.dart';
 import 'package:provider/provider.dart';
 
+import 'notification/notification.dart';
+import 'notificationcreditors/dropdownnotificationcrediotrs.dart';
+
 class Homepage extends StatefulWidget {
   @override
   _HomepageState createState() => _HomepageState();
@@ -150,9 +153,9 @@ class _HomepageState extends State<Homepage> {
               return Center(child: Text('Items'));
 
             case 3:
-              return Center(child: Text('Creditors'));
+              return DropdownNotificationCreditor();
             case 4:
-              return Center(child: Text('Notification'));
+              return AddNotification();
             case 5:
               return Settings();
             case 6:
