@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pos/components/primary_button.dart';
+import 'package:pos/screens/notificationcreditors/creditor_list.dart';
 
 class AddNotificationCreditors extends StatefulWidget {
   const AddNotificationCreditors({Key? key}) : super(key: key);
@@ -96,7 +97,13 @@ class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
                   child: PrimaryButton(
                     // shape: BorderRadius.circular(5),
                     title: 'Send',
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CreditorList(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
