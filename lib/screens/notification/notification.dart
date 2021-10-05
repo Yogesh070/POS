@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pos/components/constrants.dart';
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/controller/notificationcontroller.dart';
+import 'package:pos/screens/addclients/addclients.dart';
 import 'package:provider/provider.dart';
 
 class AddNotification extends StatefulWidget {
@@ -94,7 +95,13 @@ class _AddNotificationState extends State<AddNotification> {
                   width: 100,
                   child: PrimaryButton(
                     title: 'Send',
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => AddClient(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
