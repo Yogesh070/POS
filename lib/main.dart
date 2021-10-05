@@ -3,9 +3,10 @@ import 'package:pos/controller/settings_controller.dart';
 import 'package:pos/controller/storesController.dart';
 import 'package:pos/controller/sidenav_controller.dart';
 import 'package:pos/screens/homepage.dart';
-import 'package:pos/screens/settings.dart';
-import 'package:pos/webview/main_screen/mainscreen.dart';
 import 'package:provider/provider.dart';
+import 'controller/client_controller.dart';
+import 'controller/creditor_controller.dart';
+import 'controller/notificationcontroller.dart';
 import 'controller/payment_controller.dart';
 import 'controller/ticket.dart';
 
@@ -33,6 +34,15 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => TicketProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CreditorController(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ClientController(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => NotificationController(),
         ),
       ],
       child: MaterialApp(
