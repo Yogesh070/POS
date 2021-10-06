@@ -7,18 +7,6 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     var _controller = Provider.of<SettingController>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Settings',
-          style: TextStyle(color: Colors.black),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            // Navigator.pop(context);
-          },
-        ),
-      ),
       body: ListView(
         children: [
           SettingList(
