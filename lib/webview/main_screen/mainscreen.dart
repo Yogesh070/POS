@@ -19,56 +19,56 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SideMenu((int index) {
-        setState(() {
-          selectedIndex = index;
-        });
-      }, selectedIndex),
+      // drawer: SideMenu((int index) {
+      //   setState(() {
+      //     selectedIndex = index;
+      //   });
+      // }, selectedIndex),
       key: Provider.of<SideNavController>(context, listen: false).scafoldKey,
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //only shows in desktop
           if (ResponsiveScreen.isdesktop(context))
+            // Expanded(
+            //   //passing function
+
+            //   child: SideMenu((int index) {
+            //     setState(() {
+            //       selectedIndex = index;
+            //     });
+            //   }, selectedIndex),
+            // ),
             Expanded(
-              //passing function
+              flex: 5,
+              child: Container(
+                child: Builder(
+                  builder: (context) {
+                    switch (selectedIndex) {
+                      case 0:
+                        return Center(child: Text('Food and Drinks'));
+                      case 1:
+                        return Center(child: Text('Bills'));
+                      case 2:
+                        return Center(child: Text('Items'));
 
-              child: SideMenu((int index) {
-                setState(() {
-                  selectedIndex = index;
-                });
-              }, selectedIndex),
-            ),
-          Expanded(
-            flex: 5,
-            child: Container(
-              child: Builder(
-                builder: (context) {
-                  switch (selectedIndex) {
-                    case 0:
-                      return Center(child: Text('Food and Drinks'));
-                    case 1:
-                      return Center(child: Text('Bills'));
-                    case 2:
-                      return Center(child: Text('Items'));
-
-                    case 3:
-                      return Center(child: Text('Creditors'));
-                    case 4:
-                      return Center(child: Text('Notification'));
-                    case 5:
-                      return SettingsScreen();
-                    case 6:
-                      return Center(child: Text('App'));
-                    case 7:
-                      return Center(child: Text('Help'));
-                    default:
-                  }
-                  return Container();
-                },
+                      case 3:
+                        return Center(child: Text('Creditors'));
+                      case 4:
+                        return Center(child: Text('Notification'));
+                      case 5:
+                        return SettingsScreen();
+                      case 6:
+                        return Center(child: Text('App'));
+                      case 7:
+                        return Center(child: Text('Help'));
+                      default:
+                    }
+                    return Container();
+                  },
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

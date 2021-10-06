@@ -4,6 +4,7 @@ import 'package:pos/components/expandable_sidenav.dart';
 import 'package:pos/components/items_grid_view.dart';
 import 'package:pos/controller/ticket.dart';
 import 'package:pos/screens/add_customer.dart';
+import 'package:pos/screens/itemlist.dart';
 import 'package:pos/screens/openticket/tickets_screen.dart';
 import 'package:pos/screens/settings.dart';
 import 'package:pos/utilities/constant.dart';
@@ -13,6 +14,12 @@ import 'package:provider/provider.dart';
 
 import 'notification/notification.dart';
 import 'notificationcreditors/dropdownnotificationcrediotrs.dart';
+
+class MenuOptions {
+  String title;
+  IconData icon;
+  MenuOptions({required this.title, required this.icon});
+}
 
 class Homepage extends StatefulWidget {
   @override
@@ -43,6 +50,16 @@ class _HomepageState extends State<Homepage> {
     'Snacks',
     'Alcohol'
   ];
+  final List<MenuOptions> menuOptions = [
+    MenuOptions(title: 'Menu', icon: Icons.fastfood),
+    MenuOptions(title: 'Bills', icon: Icons.line_style),
+    MenuOptions(title: 'Items', icon: Icons.list),
+    MenuOptions(title: 'Creditors', icon: Icons.credit_card),
+    MenuOptions(title: 'Notifications', icon: Icons.notifications),
+    MenuOptions(title: 'Settings', icon: Icons.settings),
+    MenuOptions(title: 'Apps', icon: Icons.app_settings_alt),
+    MenuOptions(title: 'Help', icon: Icons.help)
+  ];
   String dropdownValue = 'All Items';
 
   double sidebarPanelWidth = 60.0;
@@ -70,7 +87,7 @@ class _HomepageState extends State<Homepage> {
     Size media = MediaQuery.of(context).size;
     return Scaffold(
       key: Provider.of<SideNavController>(context, listen: false).scafoldKey,
-      appBar: (media.width < 600)
+      appBar: selectedIndex == 0
           ? AppBar(
               titleSpacing: 10,
               elevation: 0,
@@ -137,9 +154,10 @@ class _HomepageState extends State<Homepage> {
                     ],
                   ),
                 ],
-              ),
-            )
-          : PreferredSize(child: Container(), preferredSize: Size(0, 0)),
+              ))
+          : AppBar(
+              title: Text(menuOptions[selectedIndex].title),
+            ),
       // body: newHome(media),
       body: Builder(
         builder: (context) {
@@ -150,8 +168,7 @@ class _HomepageState extends State<Homepage> {
             case 1:
               return Center(child: Text('Bills'));
             case 2:
-              return Center(child: Text('Items'));
-
+              return ItemList();
             case 3:
               return DropdownNotificationCreditor();
             case 4:
@@ -167,11 +184,15 @@ class _HomepageState extends State<Homepage> {
           return Container();
         },
       ),
-      drawer: SideMenu((int index) {
-        setState(() {
-          selectedIndex = index;
-        });
-      }, selectedIndex),
+      drawer: SideMenu(
+        onNavIndexChanged: (int index) {
+          setState(() {
+            selectedIndex = index;
+          });
+        },
+        selectedIndex: selectedIndex,
+        menuOptions: menuOptions,
+      ),
     );
   }
 
