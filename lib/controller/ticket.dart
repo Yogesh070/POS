@@ -46,6 +46,13 @@ class TicketProvider extends ChangeNotifier {
     ),
   ];
 
+  final List<OpenTicketModel> allNotification = [
+    OpenTicketModel(
+      name: 'All',
+      isChecked: false,
+    ),
+  ];
+
 //using get to access private open list
   UnmodifiableListView<OpenTicketModel> get openTicketList =>
       UnmodifiableListView(_openTicketList);
@@ -58,6 +65,22 @@ class TicketProvider extends ChangeNotifier {
 
   changeSwitchValue(int index) {
     _openTicketList[index].isChecked = !_openTicketList[index].isChecked!;
+    notifyListeners();
+  }
+
+//creditor notification dropdown check
+  isSingleCheck(int index, bool? value) {
+    _openTicketList[index].isChecked = !_openTicketList[index].isChecked!;
+    allNotification.first.isChecked =
+        _openTicketList.every((element) => element.isChecked!);
+    notifyListeners();
+  }
+
+//check all
+  isCheckAll(bool? value) {
+    allNotification.first.isChecked = value!;
+    openTicketList
+        .forEach((openTicketList) => openTicketList.isChecked = value);
     notifyListeners();
   }
 
@@ -79,7 +102,20 @@ class TicketProvider extends ChangeNotifier {
 //to sort radio button value
   selectedShippingRadio(Shipping value) {
     shippingItem.value = value;
+    notifyListeners();
+  }
 
+  //radio valuenotifier for animated builder shippingItem
+  ValueNotifier<OpenTicketModel> notificationCreditorValue =
+      new ValueNotifier<OpenTicketModel>(OpenTicketModel(
+    name: 'Amit Shrestha',
+    amount: 'Rs. 2211',
+    created: DateTime.parse("2021-09-14 09:50:04"),
+    isChecked: false,
+  ));
+
+  selectedCreditorsValue(OpenTicketModel value) {
+    notificationCreditorValue.value = value;
     notifyListeners();
   }
 
