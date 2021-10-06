@@ -10,36 +10,34 @@ class DiningScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Dining',
-            style: TextStyle(color: Colors.black),
-          ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Dining',
+          style: TextStyle(color: Colors.black),
         ),
-        body: _diningContent(context),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(
-            bottom: 30.0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
           ),
-          child: FloatingActionButton(
-            backgroundColor: Color(0xff30B700),
-            onPressed: () {
-              addDining(context);
-            },
-            child: Icon(
-              Icons.add,
-            ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: _diningContent(context),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(
+          bottom: 30.0,
+        ),
+        child: FloatingActionButton(
+          backgroundColor: Color(0xff30B700),
+          onPressed: () {
+            addDining(context);
+          },
+          child: Icon(
+            Icons.add,
           ),
         ),
       ),
@@ -151,8 +149,7 @@ class _DiningAlertDialogeComponentState
                 title: 'Save',
                 onPressed: () {
                   diningNotifier.addDining(
-                    DiningModel(_diningName.text,false),
-                    
+                    DiningModel(_diningName.text, false),
                   );
                   Navigator.pop(context);
                 },

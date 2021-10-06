@@ -17,41 +17,37 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 2.0,
-          leading: InkWell(
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
-            onTap: () {
-              Navigator.pop(context);
-            },
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 2.0,
+        leading: InkWell(
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
           ),
-          title: Text(
-            'Payment',
-            style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w700,
-                color: Colors.black),
-          ),
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
-        body: _paymentContent(),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(
-            bottom: 30.0,
-          ),
-          child: FloatingActionButton(
-            backgroundColor: Color(0xff30B700),
-            onPressed: () {
-              addPayment(context);
-            },
-            child: Icon(
-              Icons.add,
-            ),
+        title: Text(
+          'Payment',
+          style: TextStyle(
+              fontSize: 16.0, fontWeight: FontWeight.w700, color: Colors.black),
+        ),
+      ),
+      body: _paymentContent(),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(
+          bottom: 30.0,
+        ),
+        child: FloatingActionButton(
+          backgroundColor: Color(0xff30B700),
+          onPressed: () {
+            addPayment(context);
+          },
+          child: Icon(
+            Icons.add,
           ),
         ),
       ),
