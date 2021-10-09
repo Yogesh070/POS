@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pos/components/constrants.dart';
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/controller/ticket.dart';
 import 'package:pos/screens/notificationcreditors/add_notification_creaditors.dart';
+import 'package:pos/utilities/constant.dart';
 import 'package:provider/provider.dart';
 import 'creditorsdropdownlist.dart';
 import 'multi_checkbox_creditors.dart';
