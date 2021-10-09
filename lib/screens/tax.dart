@@ -2,12 +2,12 @@ import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:pos/components/add_button_header.dart';
 import 'package:pos/components/addtextfield.dart';
-import 'package:pos/components/constrants.dart';
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/components/secondary_button.dart';
 import 'package:pos/controller/settings_controller.dart';
 import 'package:pos/screens/widgets/item_dropdown_tax.dart';
 import 'package:pos/screens/widgets/taxes_list.dart';
+import 'package:pos/utilities/constant.dart';
 import 'package:pos/webview/components/header_container.dart';
 import 'package:provider/provider.dart';
 
