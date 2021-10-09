@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/adds_on_tilte.dart';
-import 'package:pos/components/constrants.dart';
 import 'package:pos/controller/ticket.dart';
+import 'package:pos/utilities/constant.dart';
 
-class DiscountListBuilder extends StatelessWidget {
-  const DiscountListBuilder({
+class AddOnsListBuilder extends StatelessWidget {
+  const AddOnsListBuilder({
     Key? key,
     required TicketProvider controller,
   })  : _controller = controller,
@@ -19,19 +19,19 @@ class DiscountListBuilder extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 1),
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          final discount = _controller.discounts[index];
+          final addsOns = _controller.addsOn[index];
           return AddsOnTile(
-            name: '${discount.discountName}',
-            isChecked: discount.isDiscountChecked,
+            name: '${addsOns.addonsName}',
+            isChecked: addsOns.isChecked,
             chechBoxCallback: (value) {
-              _controller.changeDiscountSwitchValue(index);
+              _controller.changeAddsOnValue(index);
             },
             onTap: () {
-              _controller.changeDiscountSwitchValue(index);
+              _controller.changeAddsOnValue(index);
             },
           );
         },
         separatorBuilder: (context, index) => divider,
-        itemCount: _controller.discounts.length);
+        itemCount: _controller.addsOn.length);
   }
 }
