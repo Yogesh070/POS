@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pos/components/constrants.dart';
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/controller/notificationcontroller.dart';
 import 'package:pos/screens/addclients/addclients.dart';
+import 'package:pos/utilities/constant.dart';
 import 'package:provider/provider.dart';
 
 class AddNotification extends StatefulWidget {
