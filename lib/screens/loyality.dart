@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/addtextfield.dart';
-import 'package:pos/components/constrants.dart';
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/components/secondary_button.dart';
+import 'package:pos/utilities/constant.dart';
 import 'package:pos/webview/components/header_container.dart';
 
 class LoyalityScreen extends StatefulWidget {
