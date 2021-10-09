@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/addtextfield.dart';
-import 'package:pos/components/constrants.dart';
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/components/secondary_button.dart';
 import 'package:pos/controller/settings_controller.dart';
 import 'package:pos/model/diningModel.dart';
+import 'package:pos/utilities/constant.dart';
 import 'package:pos/webview/components/header_container.dart';
 import 'package:provider/provider.dart';
 
