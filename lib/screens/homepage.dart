@@ -156,7 +156,10 @@ class _HomepageState extends State<Homepage> {
                 ],
               ))
           : AppBar(
-              title: Text(menuOptions[selectedIndex].title),
+              title: Text(
+                menuOptions[selectedIndex].title,
+                style: TextStyle(color: Colors.black),
+              ),
             ),
       // body: newHome(media),
       body: Builder(
