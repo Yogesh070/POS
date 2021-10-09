@@ -91,6 +91,7 @@ class TicketsScreen extends StatelessWidget {
                             '${TimeAgo.timeAgoSinceDate(openTicket.created!)}',
                         taxTitle: '${openTicket.name}',
                         amount: '${openTicket.amount}',
+                        iconData: Icons.person,
                       ),
                     );
                   },
