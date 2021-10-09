@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pos/controller/ticket.dart';
-import 'package:pos/screens/widgets/listbuilder/addson_builder.dart';
 import 'package:pos/screens/widgets/listbuilder/discount_builder.dart';
+import 'package:pos/screens/widgets/listbuilder/addson_builder.dart';
 import 'package:pos/screens/widgets/listbuilder/taxes_builder.dart';
 import 'package:pos/utilities/constant.dart';
 import 'package:provider/provider.dart';
