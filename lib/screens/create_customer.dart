@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:pos/components/primary_button.dart';
+import 'package:pos/controller/customer_controller.dart';
+import 'package:pos/model/customer.dart';
 import 'package:pos/utilities/constant.dart';
+import 'package:provider/provider.dart';
 
 class CreateCustomer extends StatelessWidget {
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _phone = TextEditingController();
+  final TextEditingController _name = TextEditingController();
+  final TextEditingController _address = TextEditingController();
+  final TextEditingController _note = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +30,7 @@ class CreateCustomer extends StatelessWidget {
                 color: Colors.black,
               ),
               title: Text(
-                'CREATE CUSTOMER',
+                'Create Customer',
                 style: kAppBarText,
               ),
             )
@@ -61,7 +72,7 @@ class CreateCustomer extends StatelessWidget {
       body: Container(
         margin: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
         child: Form(
-          autovalidateMode: AutovalidateMode.always,
+          key: _formKey,
           child: Column(
             children: [
               CustomTextFormField(
@@ -70,15 +81,23 @@ class CreateCustomer extends StatelessWidget {
                 icon: Icons.person,
                 inputType: TextInputType.text,
                 validationFunction: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Name';
+                  }
                   return null;
                 },
+                controller: _name,
               ),
               CustomTextFormField(
                 hintText: 'Email',
                 labelText: 'Email',
                 icon: Icons.email,
                 inputType: TextInputType.emailAddress,
+                controller: _email,
                 validationFunction: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter email';
+                  }
                   return null;
                 },
               ),
@@ -87,7 +106,13 @@ class CreateCustomer extends StatelessWidget {
                 labelText: 'Phone',
                 icon: Icons.phone,
                 inputType: TextInputType.phone,
+                controller: _phone,
                 validationFunction: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Phone number';
+                  } else if (value.length != 10) {
+                    return 'Please enter valid phone number';
+                  }
                   return null;
                 },
               ),
@@ -95,8 +120,12 @@ class CreateCustomer extends StatelessWidget {
                 hintText: 'Address',
                 labelText: 'Address',
                 icon: Icons.pin_drop,
-                inputType: TextInputType.text,
+                inputType: TextInputType.streetAddress,
+                controller: _address,
                 validationFunction: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter Address';
+                  }
                   return null;
                 },
               ),
@@ -105,29 +134,37 @@ class CreateCustomer extends StatelessWidget {
                 labelText: 'Note',
                 icon: Icons.message,
                 inputType: TextInputType.text,
+                controller: _note,
                 validationFunction: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
                   return null;
                 },
               ),
               SizedBox(
                 height: 20,
               ),
-              TextButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith((states) =>
-                      (states.contains(MaterialState.pressed))
-                          ? kDefaultGreen.withOpacity(0.5)
-                          : kDefaultGreen),
-                  foregroundColor: MaterialStateProperty.all(Colors.white),
-                  padding: MaterialStateProperty.all(
-                    EdgeInsets.symmetric(horizontal: 54),
-                  ),
-                ),
-                onPressed: () {
-                  print('Save');
-                },
-                child: Text('Save'),
-              ),
+              PrimaryButton(
+                  title: 'Save',
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      final customer = Customer(
+                        email: _email.text,
+                        name: _name.text,
+                        phone: _phone.text,
+                        address: _address.text,
+                        note: _note.text,
+                      );
+                      print(customer.name);
+                      Provider.of<CustomerController>(context, listen: false)
+                          .addCustomer(customer);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Customer added')),
+                      );
+                      Navigator.pop(context);
+                    }
+                  })
             ],
           ),
         ),
@@ -142,21 +179,24 @@ class CustomTextFormField extends StatelessWidget {
   final String hintText;
   final TextInputType inputType;
   final String? Function(String?) validationFunction;
+  final TextEditingController? controller;
 
-  CustomTextFormField(
-      {Key? key,
-      required this.icon,
-      required this.labelText,
-      required this.hintText,
-      required this.inputType,
-      required this.validationFunction})
-      : super(key: key);
+  const CustomTextFormField({
+    Key? key,
+    required this.icon,
+    required this.labelText,
+    required this.hintText,
+    required this.inputType,
+    required this.validationFunction,
+    this.controller,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: TextFormField(
+        controller: controller,
         keyboardType: inputType,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.only(top: 0, bottom: 8),

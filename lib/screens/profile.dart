@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/primary_button.dart';
+import 'package:pos/model/customer.dart';
 import 'package:pos/utilities/constant.dart';
 
 class Profile extends StatelessWidget {
+  final Customer customer;
+  const Profile({Key? key, required this.customer}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     double mediaWidth = MediaQuery.of(context).size.width;
@@ -10,25 +13,25 @@ class Profile extends StatelessWidget {
       ListTile(
         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
         leading: Icon(Icons.email),
-        title: Text('chelsi@gmail.com'),
+        title: Text(customer.email),
         horizontalTitleGap: 0,
       ),
       ListTile(
         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
         leading: Icon(Icons.phone_android),
         horizontalTitleGap: 0,
-        title: Text('98234230423'),
+        title: Text(customer.phone),
       ),
       ListTile(
         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
         leading: Icon(Icons.location_on_outlined),
-        title: Text('Pokhara'),
+        title: Text(customer.address),
         horizontalTitleGap: 0,
       ),
       ListTile(
         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
         leading: Icon(Icons.message),
-        title: Text('Ok'),
+        title: Text(customer.note ?? ''),
         horizontalTitleGap: 0,
       ),
       ListTile(

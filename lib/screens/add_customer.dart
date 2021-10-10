@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pos/controller/customer_controller.dart';
 import 'package:pos/screens/create_customer.dart';
 import 'package:pos/screens/profile.dart';
 import 'package:pos/utilities/constant.dart';
+import 'package:provider/provider.dart';
 
 class AddCustomer extends StatefulWidget {
   @override
@@ -9,23 +11,6 @@ class AddCustomer extends StatefulWidget {
 }
 
 class _AddCustomerState extends State<AddCustomer> {
-  List<String> customers = [
-    'Chelsi Ketan',
-    'Kriti Gurung',
-    'Amit Shrestha',
-    'Shak Ruk Khan',
-    'Chelsi Ketan',
-    'Kriti Gurung',
-    'Amit Shrestha',
-    'Shak Ruk Khan',
-    'Chelsi Ketan',
-    'Kriti Gurung',
-    'Amit Shrestha',
-    'Shak Ruk Khan',
-    'Chelsi Ketan',
-    'Kriti Gurung',
-    'Amit Shrestha',
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,72 +88,80 @@ class _AddCustomerState extends State<AddCustomer> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: customers.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      (MediaQuery.of(context).size.width > 600)
-                          ? showDialog(
-                              barrierColor: Colors.transparent,
-                              context: context,
-                              builder: (context) {
-                                return SimpleDialog(
+              child: Consumer<CustomerController>(
+                  builder: (context, customerController, child) {
+                return ListView.builder(
+                  itemCount: customerController.customers.length,
+                  itemBuilder: (context, index) {
+                    final customer = customerController.customers[index];
+                    return GestureDetector(
+                      onTap: () {
+                        (MediaQuery.of(context).size.width > 600)
+                            ? showDialog(
+                                barrierColor: Colors.transparent,
+                                context: context,
+                                builder: (context) {
+                                  return SimpleDialog(
+                                    children: [
+                                      Container(
+                                        width: 700,
+                                        height: 800,
+                                        color: Colors.red,
+                                        child: Profile(customer: customer),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              )
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Profile(
+                                    customer: customer,
+                                  ),
+                                ),
+                              );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  AssetImage('assets/images/profile.png'),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 12),
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                        width: 1, color: kBorderColor),
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      width: 700,
-                                      height: 800,
-                                      color: Colors.red,
-                                      child: Profile(),
+                                    Text(customer.name),
+                                    Text(
+                                      customer.phone,
+                                      style: TextStyle(fontSize: 12),
                                     ),
                                   ],
-                                );
-                              },
-                            )
-                          : Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Profile()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CircleAvatar(
-                            backgroundImage:
-                                AssetImage('assets/images/profile.png'),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 12),
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom:
-                                      BorderSide(width: 1, color: kBorderColor),
                                 ),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(customers[index]),
-                                  Text(
-                                    '98324234234',
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                ],
-                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                );
+              }),
             )
           ],
         ),
@@ -207,64 +200,50 @@ class _AddCustomerState extends State<AddCustomer> {
 }
 
 class AddCustomerTablet extends StatelessWidget {
-  final List<String> customers = [
-    'Chelsi Ketan',
-    'Kriti Gurung',
-    'Amit Shrestha',
-    'Shak Ruk Khan',
-    'Chelsi Ketan',
-    'Kriti Gurung',
-    'Amit Shrestha',
-    'Shak Ruk Khan',
-    'Chelsi Ketan',
-    'Kriti Gurung',
-    'Amit Shrestha',
-    'Shak Ruk Khan',
-    'Chelsi Ketan',
-    'Kriti Gurung',
-    'Amit Shrestha',
-  ];
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: customers.length,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/profile.png'),
-              ),
-              // Icon(Icons.ac_unit),
-              SizedBox(
-                width: 20,
-              ),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(width: 1, color: kBorderColor),
+    return Consumer<CustomerController>(
+        builder: (context, customerController, child) {
+      return ListView.builder(
+        itemCount: customerController.customers.length,
+        itemBuilder: (context, index) {
+          final customer = customerController.customers[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/profile.png'),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(width: 1, color: kBorderColor),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(customer.name),
+                        Text(
+                          customer.phone,
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(customers[index]),
-                      Text(
-                        '98324234234',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+              ],
+            ),
+          );
+        },
+      );
+    });
   }
 }
