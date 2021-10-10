@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pos/controller/customer_controller.dart';
 import 'package:pos/controller/settings_controller.dart';
 import 'package:pos/controller/storesController.dart';
 import 'package:pos/controller/sidenav_controller.dart';
@@ -17,6 +18,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (_) => CustomerController(),
+        ),
         ChangeNotifierProvider(
           create: (_) => SettingController(),
         ),
