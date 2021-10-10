@@ -184,7 +184,9 @@ class CreditorMenuItems extends StatelessWidget {
       itemBuilder: (context) => [
         PopupMenuItem<int>(
           value: 0,
-          child: Text('Import'),
+          child: GestureDetector(
+            child: Text('Import'),
+          ),
         ),
         PopupMenuItem<int>(
           value: 1,

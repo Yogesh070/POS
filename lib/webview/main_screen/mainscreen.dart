@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/responsive_screen.dart';
 import 'package:pos/controller/sidenav_controller.dart';
-
-import 'package:pos/webview/main_screen/sidemenu.dart';
 import 'package:provider/provider.dart';
-
 import '../settings_componets/settings_screen.dart';
 
 class MainScreen extends StatefulWidget {

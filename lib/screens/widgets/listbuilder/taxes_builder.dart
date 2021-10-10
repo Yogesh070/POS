@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/adds_on_tilte.dart';
-import 'package:pos/components/constrants.dart';
 import 'package:pos/controller/ticket.dart';
+import 'package:pos/utilities/constant.dart';
 
 class TaxBuilder extends StatelessWidget {
   const TaxBuilder({

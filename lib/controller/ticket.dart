@@ -141,7 +141,7 @@ class TicketProvider extends ChangeNotifier {
   ValueNotifier<Shipping> shippingItem =
       new ValueNotifier<Shipping>(Shipping(shippingName: 'Dine in'));
 
-//for items ordered
+//--------for items ordered-------------
 
   final List<ItemsOrdered> _itemsOrdered = [
     ItemsOrdered(
@@ -183,6 +183,21 @@ class TicketProvider extends ChangeNotifier {
 
   UnmodifiableListView<ItemsOrdered> get itemsOrdered =>
       UnmodifiableListView(_itemsOrdered);
+
+//for selected items to be refunded
+  final List<ItemsOrdered> itemsRefund = [];
+
+  onSelectRow(int index, bool selected, ItemsOrdered items) {
+    _itemsOrdered[index].isRefund = !_itemsOrdered[index].isRefund!;
+    notifyListeners();
+    if (selected) {
+      itemsRefund.add(items);
+      notifyListeners();
+    } else {
+      itemsRefund.remove(items);
+      notifyListeners();
+    }
+  }
 
   List<String> dropdownItems = <String>[
     'Dine in',

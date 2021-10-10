@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pos/components/constrants.dart';
 import 'package:pos/controller/ticket.dart';
+import 'package:pos/utilities/constant.dart';
 import 'package:provider/provider.dart';
 
 class CreditorsNotiDropDownList extends StatelessWidget {
