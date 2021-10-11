@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pos/components/expandable_sidenav.dart';
 import 'package:pos/components/items_grid_view.dart';
+import 'package:pos/controller/settings_controller.dart';
 import 'package:pos/controller/ticket.dart';
 import 'package:pos/screens/add_customer.dart';
 import 'package:pos/screens/itemlist.dart';
@@ -85,6 +86,15 @@ class _HomepageState extends State<Homepage> {
 
   Widget build(BuildContext context) {
     Size media = MediaQuery.of(context).size;
+    List optionItems = Provider.of<SettingController>(context).optionItems;
+    final List<PopupMenuItem> _popUpOptions = optionItems
+        .map(
+          (item) => PopupMenuItem(
+            value: item,
+            child: Text(item),
+          ),
+        )
+        .toList();
     return Scaffold(
       key: Provider.of<SideNavController>(context, listen: false).scafoldKey,
       appBar: selectedIndex == 0
@@ -120,7 +130,19 @@ class _HomepageState extends State<Homepage> {
                                   },
                                 ),
                           child: Icon(Icons.person_add_alt_1_sharp)),
-                      Icon(Icons.more_vert),
+                      PopupMenuButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        itemBuilder: (context) => _popUpOptions,
+                        onSelected: (val) {
+                          if (val.toString() == 'Grid View' ||
+                              val.toString() == 'List View') {
+                            Provider.of<SettingController>(context,
+                                    listen: false)
+                                .changeLayout();
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -387,9 +409,10 @@ class _HomepageState extends State<Homepage> {
                           )
                         : Container(),
                     foods.length > 0
-                        ? ((media.width < 600)
+                        ? ((Provider.of<SettingController>(context,
+                                    listen: false)
+                                .isListLayout)
                             ? ItemsListView(foods: foods)
-                            // ? ItemsGridView(foods: foods)
                             : ItemsGridView(foods: foods))
                         : Center(
                             child: Column(

@@ -11,6 +11,26 @@ import 'package:pos/screens/receipt.dart';
 import 'package:pos/screens/taxloyalityscreen/mobile_tax_screen.dart';
 
 class SettingController extends ChangeNotifier {
+  //-------to change homepage layout-------------//
+
+  bool? _islistLayout = true;
+  bool get isListLayout => _islistLayout!;
+
+  List _optionItems = ['Grid View', 'About'];
+  List get optionItems => _optionItems;
+
+  void changeLayout() {
+    _islistLayout = !_islistLayout!;
+    if (_islistLayout!) {
+      _optionItems.removeAt(0);
+      _optionItems.insert(0, 'Grid View');
+    } else {
+      optionItems.removeAt(0);
+      _optionItems.insert(0, 'List View');
+    }
+    notifyListeners();
+  }
+
   bool settingScreenFlag = false;
   bool featureScreenFlag = false;
   bool switchValue = true;
@@ -56,13 +76,6 @@ class SettingController extends ChangeNotifier {
       "title": "Dining Option",
       "route": DiningScreen(),
     },
-    // "Features",
-    // "Billing & Subscription",
-    // "Payment",
-    // "Loyalty",
-    // "Taxes",
-    // "Receipt",
-    // "Dining Option"
   ];
 
   final List<Map<String, dynamic>> posSettingList = [
