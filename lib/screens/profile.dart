@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/primary_button.dart';
+import 'package:pos/controller/customer_controller.dart';
 import 'package:pos/model/customer.dart';
+import 'package:pos/screens/create_customer.dart';
 import 'package:pos/utilities/constant.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatelessWidget {
   final Customer customer;
@@ -149,7 +152,7 @@ class Profile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Chelsi Ketan',
+                  customer.name,
                   style: (mediaWidth < 600)
                       ? TextStyle(fontSize: 18, fontWeight: FontWeight.w500)
                       : TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
@@ -159,7 +162,14 @@ class Profile extends StatelessWidget {
                     tooltip: 'Edit Profile',
                     icon: Icon(Icons.edit),
                     onPressed: () {
-                      // Navigator.push(context, MaterialPageRoute(builder: (context)))
+                      Provider.of<CustomerController>(context, listen: false)
+                          .toEditCustomer = customer;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateCustomer(),
+                        ),
+                      );
                     }),
               ],
             ),

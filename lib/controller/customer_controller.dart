@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:pos/model/customer.dart';
 
 class CustomerController extends ChangeNotifier {
+  Customer? toEditCustomer;
+
   final List<Customer> _customer = [
     Customer(
         email: 'ChelsiKetan99@mail.com',
@@ -52,6 +54,12 @@ class CustomerController extends ChangeNotifier {
 
   void addCustomer(Customer customer) {
     _customer.add(customer);
+    notifyListeners();
+  }
+
+  void editCustomer(Customer customer) {
+    int index = _customer.indexOf(toEditCustomer!);
+    _customer[index] = customer;
     notifyListeners();
   }
 }

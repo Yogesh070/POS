@@ -5,14 +5,40 @@ import 'package:pos/model/customer.dart';
 import 'package:pos/utilities/constant.dart';
 import 'package:provider/provider.dart';
 
-class CreateCustomer extends StatelessWidget {
+class CreateCustomer extends StatefulWidget {
+  @override
+  State<CreateCustomer> createState() => _CreateCustomerState();
+}
+
+class _CreateCustomerState extends State<CreateCustomer> {
   final TextEditingController _email = TextEditingController();
+
   final TextEditingController _phone = TextEditingController();
+
   final TextEditingController _name = TextEditingController();
+
   final TextEditingController _address = TextEditingController();
+
   final TextEditingController _note = TextEditingController();
 
+  bool _forEdit = false;
+
   final _formKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    Customer? toEditCustomer =
+        Provider.of<CustomerController>(context, listen: false).toEditCustomer;
+    if (toEditCustomer != null) _forEdit = true;
+    if (_forEdit) {
+      _email.text = toEditCustomer!.email;
+      _address.text = toEditCustomer.address;
+      _note.text = toEditCustomer.note!;
+      _name.text = toEditCustomer.name;
+      _phone.text = toEditCustomer.phone;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,25 +172,43 @@ class CreateCustomer extends StatelessWidget {
                 height: 20,
               ),
               PrimaryButton(
-                  title: 'Save',
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      final customer = Customer(
-                        email: _email.text,
-                        name: _name.text,
-                        phone: _phone.text,
-                        address: _address.text,
-                        note: _note.text,
+                title: 'Save',
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    final customer = Customer(
+                      email: _email.text,
+                      name: _name.text,
+                      phone: _phone.text,
+                      address: _address.text,
+                      note: _note.text,
+                    );
+                    if (_forEdit) {
+                      Provider.of<CustomerController>(context, listen: false)
+                          .editCustomer(customer);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Customer Edited Sucessfully'),
+                          backgroundColor: kDefaultGreen,
+                        ),
                       );
-                      print(customer.name);
+                      Provider.of<CustomerController>(context, listen: false)
+                          .toEditCustomer = null;
+                      int count = 0;
+                      Navigator.of(context).popUntil((_) => count++ >= 2);
+                    } else {
                       Provider.of<CustomerController>(context, listen: false)
                           .addCustomer(customer);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Customer added')),
+                        const SnackBar(
+                          content: Text('Customer added Sucessfully'),
+                          backgroundColor: kDefaultGreen,
+                        ),
                       );
                       Navigator.pop(context);
                     }
-                  })
+                  }
+                },
+              )
             ],
           ),
         ),
