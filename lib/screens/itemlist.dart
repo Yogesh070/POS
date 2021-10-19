@@ -1,24 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:pos/controller/items_controller.dart';
+import 'package:pos/model/item.dart';
 import 'package:pos/screens/add_item.dart';
 import 'package:pos/utilities/constant.dart';
+import 'package:provider/provider.dart';
 
 enum FoodCategory {
   drinks,
   alcohol,
   snacks,
-}
-
-class Item {
-  final String name;
-  final int price;
-  final bool? isOnStock;
-  final FoodCategory? category;
-
-  Item(
-      {required this.name,
-      required this.price,
-      this.isOnStock = true,
-      this.category});
 }
 
 class ItemList extends StatefulWidget {
@@ -29,29 +20,13 @@ class ItemList extends StatefulWidget {
 }
 
 class _ItemListState extends State<ItemList> {
-  List<Item> items = [
-    Item(name: 'Black Tea', price: 30, category: FoodCategory.drinks),
-    Item(name: 'Chowmin', price: 150, category: FoodCategory.snacks),
-    Item(name: 'Coke', price: 140, category: FoodCategory.drinks),
-    Item(name: 'Ice Cream', price: 50, category: FoodCategory.drinks),
-    Item(name: 'Pakauda', price: 50, category: FoodCategory.snacks),
-    Item(name: 'Sandwich', price: 150, category: FoodCategory.snacks),
-    Item(name: 'Rum', price: 550, category: FoodCategory.alcohol),
-    Item(name: 'Wiskey', price: 850, category: FoodCategory.alcohol),
-    Item(name: 'Black Tea', price: 30, category: FoodCategory.drinks),
-  ];
   FoodCategory _groupValue = FoodCategory.snacks;
-  List<Item> sortedList = [];
-  void sortByCategory() {
-    setState(() {
-      sortedList =
-          items.where((element) => element.category == _groupValue).toList();
-    });
-  }
-
+  late Future<List<Item>> futureItem;
   void initState() {
     super.initState();
-    sortByCategory();
+    futureItem =
+        Provider.of<ItemsController>(context, listen: false).fetchItems();
+    // sortByCategory();
   }
 
   @override
@@ -80,7 +55,7 @@ class _ItemListState extends State<ItemList> {
                     setState(() {
                       _groupValue = val;
                     });
-                    sortByCategory();
+                    // sortByCategory();
                   },
                   itemBuilder: (context) => <PopupMenuItem<FoodCategory>>[
                     PopupMenuItem(
@@ -165,28 +140,67 @@ class _ItemListState extends State<ItemList> {
                   behavior: ScrollConfiguration.of(context)
                       .copyWith(scrollbars: false),
                   child: SingleChildScrollView(
-                    child: Column(
-                      children: sortedList
-                          .asMap()
-                          .entries
-                          .map(
-                            (item) => Column(
-                              children: [
-                                item.key != 0 ? Divider() : SizedBox.shrink(),
-                                ListTile(
-                                  contentPadding: EdgeInsets.zero,
-                                  leading: CircleAvatar(
-                                    backgroundImage:
-                                        AssetImage('assets/images/money.png'),
-                                  ),
-                                  title: Text(item.value.name),
-                                  trailing: Text('Rs.${item.value.price}'),
-                                ),
-                              ],
-                            ),
-                          )
-                          .toList(),
-                    ),
+                    child: FutureBuilder<List<Item>>(
+                        initialData:
+                            Provider.of<ItemsController>(context).items,
+                        future: futureItem,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<Item>> snapshot) {
+                          if (snapshot.hasData) {
+                            return Column(
+                              children: snapshot.data!
+                                  .asMap()
+                                  .entries
+                                  .map(
+                                    (item) => Column(
+                                      children: [
+                                        item.key != 0
+                                            ? Divider()
+                                            : SizedBox.shrink(),
+                                        ListTile(
+                                          contentPadding: EdgeInsets.zero,
+                                          leading: CircleAvatar(
+                                            backgroundColor: Colors.transparent,
+                                            child: CachedNetworkImage(
+                                              imageBuilder:
+                                                  (context, imageProvider) =>
+                                                      Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(24),
+                                                  image: DecorationImage(
+                                                    image: imageProvider,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              imageUrl: item.value.image!,
+                                              progressIndicatorBuilder:
+                                                  (context, url,
+                                                          downloadProgress) =>
+                                                      CircularProgressIndicator(
+                                                          value:
+                                                              downloadProgress
+                                                                  .progress),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
+                                          ),
+                                          title: Text(item.value.name),
+                                          trailing:
+                                              Text('Rs.${item.value.price}'),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('${snapshot.error}');
+                          }
+                          return CircularProgressIndicator();
+                        }),
                   ),
                 ),
               ),

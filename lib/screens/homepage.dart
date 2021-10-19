@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pos/components/expandable_sidenav.dart';
 import 'package:pos/components/items_grid_view.dart';
+import 'package:pos/controller/items_controller.dart';
 import 'package:pos/controller/settings_controller.dart';
 import 'package:pos/controller/ticket.dart';
+import 'package:pos/model/item.dart';
 import 'package:pos/screens/add_customer.dart';
 import 'package:pos/screens/itemlist.dart';
 import 'package:pos/screens/openticket/tickets_screen.dart';
@@ -29,21 +32,6 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   int selectedIndex = 0;
-  final List<String> foods = [
-    'Momo',
-    'Chicken',
-    'Chowmin',
-    'Momo',
-    'Chicken',
-    'Chowmin',
-    'Momo',
-    'Chicken',
-    'Chowmin',
-    'Momo',
-    'Chicken',
-    'Chowmin',
-  ];
-
   final List<String> items = [
     'All Items',
     'Discount',
@@ -72,9 +60,12 @@ class _HomepageState extends State<Homepage> {
   late FocusNode myfocusnode;
   int searchflex = 1;
   int itemsFlex = 4;
+  late Future<List<Item>> futureItem;
   @override
   void initState() {
     super.initState();
+    futureItem =
+        Provider.of<ItemsController>(context, listen: false).fetchItems();
     myfocusnode = FocusNode();
   }
 
@@ -183,13 +174,11 @@ class _HomepageState extends State<Homepage> {
                 style: TextStyle(color: Colors.black),
               ),
             ),
-      // body: newHome(media),
       body: Builder(
         builder: (context) {
           switch (selectedIndex) {
             case 0:
               return newHome(media);
-            // return Center(child: Text('Home'));
             case 1:
               return Center(child: Text('Bills'));
             case 2:
@@ -224,7 +213,6 @@ class _HomepageState extends State<Homepage> {
   Row newHome(Size media) {
     return Row(
       children: [
-        //section for homepage content
         Expanded(
           flex: 3,
           child: Column(
@@ -381,10 +369,10 @@ class _HomepageState extends State<Homepage> {
                     ),
                     (media.width > 600)
                         ? Container(
-                            margin: EdgeInsets.symmetric(horizontal: 16),
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
                             // width: 184,
                             // padding: EdgeInsets.all(15),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 48, vertical: 12),
                             decoration: BoxDecoration(
                               color: kDefaultGreen,
@@ -408,12 +396,14 @@ class _HomepageState extends State<Homepage> {
                             sidebarPanelWidth: sidebarPanelWidth,
                           )
                         : Container(),
-                    foods.length > 0
+                    Provider.of<ItemsController>(context).items.length > 0
                         ? ((Provider.of<SettingController>(context,
                                     listen: false)
                                 .isListLayout)
-                            ? ItemsListView(foods: foods)
-                            : ItemsGridView(foods: foods))
+                            ? ItemsListView(
+                                futureItem: futureItem,
+                              )
+                            : ItemsGridView(futureItem: futureItem))
                         : Center(
                             child: Column(
                               children: [
@@ -441,58 +431,85 @@ class _HomepageState extends State<Homepage> {
 
 class ItemsListView extends StatelessWidget {
   const ItemsListView({
+    required this.futureItem,
     Key? key,
-    required this.foods,
   }) : super(key: key);
-
-  final List<String> foods;
-
+  final Future<List<Item>> futureItem;
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        color: Colors.white,
-        child: ListView.builder(
-          itemCount: foods.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Momo_nepal.jpg/1200px-Momo_nepal.jpg'),
-                  ),
-                  // Icon(Icons.ac_unit),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(width: 1, color: kBorderColor),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            child: Text(foods[index]),
+      child: FutureBuilder(
+          initialData: Provider.of<ItemsController>(context).items,
+          future: futureItem,
+          builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final item = snapshot.data![index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: CachedNetworkImage(
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(24),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            imageUrl: item.image!,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) => Center(
+                              child: CircularProgressIndicator(
+                                color: kDefaultGreen,
+                                value: downloadProgress.progress,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           ),
-                          Text('110.00'),
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom:
+                                    BorderSide(width: 1, color: kBorderColor),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                  child: Text(item.name),
+                                ),
+                                Text('Rs.${item.price}'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
+                  );
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+            return Center(child: CircularProgressIndicator());
+          }),
     );
   }
 }
@@ -537,11 +554,12 @@ class TicketContainer extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              padding: EdgeInsets.all(13),
+              padding: const EdgeInsets.all(13),
               decoration: BoxDecoration(
-                  border: Border(
-                      left: BorderSide(
-                          width: 1, color: kDefaultBackgroundColor))),
+                border: Border(
+                  left: BorderSide(width: 1, color: kDefaultBackgroundColor),
+                ),
+              ),
               child: Column(
                 children: [
                   Text(

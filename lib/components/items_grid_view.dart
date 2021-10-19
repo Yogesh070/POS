@@ -1,55 +1,80 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:pos/controller/items_controller.dart';
+import 'package:pos/model/item.dart';
+import 'package:pos/utilities/constant.dart';
+import 'package:provider/provider.dart';
 
-class ItemsGridView extends StatefulWidget {
-  final List<String>? foods;
-
-  ItemsGridView({@required this.foods});
-  @override
-  _ItemsGridViewState createState() => _ItemsGridViewState();
-}
-
-class _ItemsGridViewState extends State<ItemsGridView> {
+class ItemsGridView extends StatelessWidget {
+  final Future<List<Item>> futureItem;
+  const ItemsGridView({required this.futureItem, Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Expanded(
       flex: 3,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: GridView.builder(
-          itemCount: widget.foods!.length,
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 150,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12),
-          itemBuilder: (context, index) => Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              image: DecorationImage(
-                  image: NetworkImage(
-                      'https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg'),
-                  fit: BoxFit.cover),
-            ),
-            height: 115,
-            width: 102,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  height: 40,
-                  width: double.infinity,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: FutureBuilder(
+          initialData: Provider.of<ItemsController>(context).items,
+          future: futureItem,
+          builder: (context, AsyncSnapshot<List<Item>> snapshot) {
+            return GridView.builder(
+              itemCount: snapshot.data!.length,
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 150,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+              ),
+              itemBuilder: (context, index) {
+                final item = snapshot.data![index];
+                return Container(
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.46),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Center(
-                      child: Text(
-                    widget.foods![index],
-                    style: TextStyle(color: Colors.white),
-                  )),
-                ),
-              ],
-            ),
-          ),
+                  height: 115,
+                  width: 102,
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    children: [
+                      CachedNetworkImage(
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        imageUrl: item.image!,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Center(
+                          child: CircularProgressIndicator(
+                            color: kDefaultGreen,
+                            value: downloadProgress.progress,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),
+                      Container(
+                        height: 40,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.46),
+                        ),
+                        child: Center(
+                          child: Text(
+                            item.name,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );
