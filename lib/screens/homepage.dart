@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pos/components/expandable_sidenav.dart';
 import 'package:pos/components/items_grid_view.dart';
+import 'package:pos/components/primary_button.dart';
 import 'package:pos/controller/items_controller.dart';
 import 'package:pos/controller/settings_controller.dart';
 import 'package:pos/controller/ticket.dart';
@@ -404,16 +405,29 @@ class _HomepageState extends State<Homepage> {
                                 futureItem: futureItem,
                               )
                             : ItemsGridView(futureItem: futureItem))
-                        : Center(
+                        : Expanded(
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text('You have no Items Yet'),
-                                Text('Go to items menu to add an item'),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child:
+                                      Text('Go to items menu to add an item'),
+                                ),
                                 Container(
-                                  padding: EdgeInsets.all(15),
-                                  color: kDefaultGreen,
-                                  child: Text('GO TO ITEMS'),
-                                )
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: PrimaryButton(
+                                      title: 'Go To Items',
+                                      onPressed: () {
+                                        setState(() {
+                                          selectedIndex = 2;
+                                        });
+                                      }),
+                                ),
                               ],
                             ),
                           ),
