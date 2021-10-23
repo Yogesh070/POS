@@ -15,7 +15,7 @@ class AddNotificationCreditors extends StatefulWidget {
 
 class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
   final ImagePicker _picker = ImagePicker();
-  PickedFile? _imageFile;
+  XFile? _imageFile;
 
   bool isSingleChecked = false;
 
@@ -115,7 +115,7 @@ class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
   }
 
   void takePhoto(ImageSource source) async {
-    final _pickedFile = await _picker.getImage(
+    final _pickedFile = await _picker.pickImage(
       source: source,
     );
     setState(() {

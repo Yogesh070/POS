@@ -21,7 +21,7 @@ class _PaymentLargeScreenState extends State<PaymentLargeScreen> {
   bool _validate = false;
   final TextEditingController _paymentTypeName = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  PickedFile? _imageFile;
+  XFile? _imageFile;
   int selectedIndex = 0;
 
   PageController pageController = PageController();
@@ -302,7 +302,7 @@ class _PaymentLargeScreenState extends State<PaymentLargeScreen> {
   }
 
   void takePhoto(ImageSource source) async {
-    final _pickedFile = await _picker.getImage(
+    final _pickedFile = await _picker.pickImage(
       source: source,
     );
     setState(() {

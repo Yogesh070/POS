@@ -130,7 +130,7 @@ class AlertDialogeComponent extends StatefulWidget {
 class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
   final TextEditingController _paymentTypeName = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  PickedFile? _imageFile;
+  XFile? _imageFile;
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +290,7 @@ class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
   }
 
   void takePhoto(ImageSource source) async {
-    final _pickedFile = await _picker.getImage(
+    final _pickedFile = await _picker.pickImage(
       source: source,
     );
     setState(() {
