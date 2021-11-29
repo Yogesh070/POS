@@ -11,6 +11,12 @@ class PaymentMethod extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+          child: Icon(Icons.arrow_back_ios_new),
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           TextButton(
             onPressed: () {

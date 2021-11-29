@@ -7,22 +7,24 @@ class SplitPersonContainer extends StatelessWidget {
     required this.number,
     required this.textField,
     this.onChanged,
+    this.onPressed,
   }) : super(key: key);
 
   final int number;
   final Widget textField;
   final Function()? onChanged;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
       margin: EdgeInsets.only(top: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Person 1',
+            'Person ${number + 1}',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -46,7 +48,7 @@ class SplitPersonContainer extends StatelessWidget {
             child: PrimaryButton(
               padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
               title: 'Pay',
-              onPressed: () {},
+              onPressed: onPressed,
             ),
           ),
         ],
