@@ -11,6 +11,7 @@ import 'package:pos/model/item.dart';
 import 'package:pos/screens/add_customer.dart';
 import 'package:pos/screens/itemlist.dart';
 import 'package:pos/screens/openticket/tickets_screen.dart';
+import 'package:pos/screens/reciept/reciept_screen.dart';
 import 'package:pos/screens/settings.dart';
 import 'package:pos/utilities/constant.dart';
 import 'package:pos/webview/main_screen/sidemenu.dart';
@@ -181,7 +182,7 @@ class _HomepageState extends State<Homepage> {
             case 0:
               return newHome(media);
             case 1:
-              return Center(child: Text('Bills'));
+              return RecieptScreen();
             case 2:
               return ItemList();
             case 3:
