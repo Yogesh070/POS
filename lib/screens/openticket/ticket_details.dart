@@ -17,7 +17,6 @@ class TicketDetail extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xffF4F4F4),
       appBar: AppBar(
-        leadingWidth: 30,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -31,32 +30,34 @@ class TicketDetail extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              sizeHeight(),
               Container(
-                decoration:
-                    BoxDecoration(border: Border(bottom: BorderSide(width: 1))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                          '${_controller.shippingItem.value.shippingName}'),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        showShipDialog(context, _controller);
-                      },
-                      icon: Icon(
-                        Icons.arrow_drop_down,
+                padding: EdgeInsets.symmetric(vertical: 5),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(width: 0.2),
+                  ),
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    showShipDialog(context, _controller);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                            '${_controller.shippingItem.value.shippingName}'),
                       ),
-                      splashRadius: 20,
-                      iconSize: 30,
-                    ),
-                  ],
+                      Icon(
+                        Icons.arrow_drop_down,
+                        size: 30,
+                      )
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
@@ -67,9 +68,13 @@ class TicketDetail extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Items Ordered'),
+                    Text(
+                      'Items Ordered',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
                     SizedBox(
-                      height: 20,
+                      height: 16,
                     ),
                     ListView.separated(
                       physics: ClampingScrollPhysics(),
@@ -101,8 +106,8 @@ class TicketDetail extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        EditItemScreen(index)),
+                                  builder: (context) => EditItemScreen(index),
+                                ),
                               );
                             },
                           ),
@@ -110,59 +115,64 @@ class TicketDetail extends StatelessWidget {
                       },
                       separatorBuilder: (context, index) => sizeHeight(),
                     ),
-                    Divider(
-                      thickness: 1,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Divider(
+                        thickness: 1,
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Total'),
-                        Text('Rs 3000'),
+                        Text(
+                          'Total',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          'Rs. 3000',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
                       ],
                     )
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 18.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    PrimaryButton(
+              SizedBox(height: 16.5),
+              Row(
+                children: [
+                  Expanded(
+                    child: PrimaryButton(
                       title: 'Save Order',
-                      onPressed: () {},
                       padding:
                           EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+                      onPressed: () {},
                     ),
-                    // CustomElevatedButton(
-                    //   title: 'Save Order',
-                    //   onPressed: () {},
-                    //   shape: BorderRadius.only(
-                    //       topLeft: Radius.circular(3),
-                    //       bottomLeft: Radius.circular(3)),
-                    //   padding:
-                    //       EdgeInsets.symmetric(horizontal: 35, vertical: 20),
-                    // ),
-                    VerticalDivider(
-                      width: 1,
-                    ),
-                    PrimaryButton(
+                  ),
+                  VerticalDivider(
+                    width: 1,
+                  ),
+                  Expanded(
+                    child: PrimaryButton(
                       title: 'Procced to Pay',
                       onPressed: () {},
                       padding:
                           EdgeInsets.symmetric(horizontal: 35, vertical: 20),
                     ),
-                    // CustomElevatedButton(
-                    //   title: 'Procced to Pay',
-                    //   shape: BorderRadius.only(
-                    //       topRight: Radius.circular(3),
-                    //       bottomRight: Radius.circular(3)),
-                    //   onPressed: () {},
-                    //   padding:
-                    //       EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                    // ),
-                  ],
-                ),
+                  ),
+                  // PrimaryButton(
+                  //   title: 'Save Order',
+                  //   onPressed: () {},
+                  //   padding: EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+                  // ),
+
+                  // PrimaryButton(
+                  //   title: 'Procced to Pay',
+                  //   onPressed: () {},
+                  //   padding: EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+                  // ),
+                ],
               ),
             ],
           ),

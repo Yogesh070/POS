@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/listile.dart';
 import 'package:pos/controller/ticket.dart';
-import 'package:pos/screens/openticket/serachbutton.dart';
 import 'package:pos/screens/openticket/ticket_details.dart';
 import 'package:pos/screens/widgets/timeago.dart';
 
@@ -18,6 +17,12 @@ class TicketsScreen extends StatelessWidget {
           'Open Ticket (${_controller.openTicketList.length})',
           style: TextStyle(fontSize: 16, color: Colors.black),
         ),
+        leading: GestureDetector(
+          child: Icon(Icons.arrow_back_ios_new),
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           TextButton(
             onPressed: () {},
@@ -31,8 +36,37 @@ class TicketsScreen extends StatelessWidget {
           SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SearchButton(),
+              Container(
+                padding: EdgeInsets.only(left: 18),
+                child: Transform.scale(
+                  scale: 0.7,
+                  child: Transform.translate(
+                    offset: Offset(0, 4),
+                    child: Checkbox(
+                      value: false,
+                      onChanged: (value) {},
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TextFormField(
+                  cursorColor: Colors.black,
+                  keyboardType: TextInputType.name,
+                  decoration: new InputDecoration(
+                    suffixIcon: Icon(Icons.search),
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.only(left: 15, top: 15, right: 15),
+                  ),
+                ),
+              ),
               IconButton(
                 onPressed: () {
                   showDialog(context, _controller);
