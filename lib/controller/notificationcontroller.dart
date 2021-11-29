@@ -5,7 +5,6 @@ class NotificationController extends ChangeNotifier {
   final List<CheckNotificationModel> notification = [
     CheckNotificationModel(title: 'Email'),
     CheckNotificationModel(title: 'App'),
-    CheckNotificationModel(title: 'Free'),
     CheckNotificationModel(title: 'Sms'),
   ];
 

@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pos/components/primary_button.dart';
-import 'package:pos/screens/notificationcreditors/creditor_list.dart';
+
+import 'creditor_list.dart';
 
 class AddNotificationCreditors extends StatefulWidget {
   const AddNotificationCreditors({Key? key}) : super(key: key);
@@ -27,84 +30,78 @@ class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
           'Add Notification',
           style: TextStyle(color: Colors.black),
         ),
+        leading: GestureDetector(
+          child: Icon(Icons.arrow_back_ios_new),
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+        children: [
+          GestureDetector(
+            onTap: () {
+              _showSelectImageDailoge();
+            },
+            child: DottedBorder(
+              dashPattern: [10, 10],
+              color: _image != null ? Colors.transparent : Colors.black,
+              child: Container(
+                width: double.infinity,
+                height: 130,
+                color: Color(0xffF4F4F4),
+                child: _image == null
+                    ? Center(
+                        child: Text('+ Add Image'),
+                      )
+                    : Image(
+                        image: FileImage(
+                          File(_image!.path),
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 23.0),
+            child: NotifiactionCustomRow(
+              icon: Icons.title,
+              label: "Title",
+            ),
+          ),
+          NotifiactionCustomRow(
+            icon: Icons.file_present,
+            label: "Discription",
+            maxLength: 160,
+          ),
+          SizedBox(height: 32),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              GestureDetector(
-                onTap: () {
-                  _showSelectImageDailoge();
-                },
-                child: Container(
-                  margin: EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                    color: Color(0xffF4F4F4),
-                    border: Border.all(
-                      width: 0.1,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                  height: MediaQuery.of(context).size.height * 0.20,
-                  width: double.infinity,
-                  child: _image == null
-                      ? Center(
-                          child: Text('+ Add Image'),
-                        )
-                      : Image(
-                          image: FileImage(
-                            File(_image!.path),
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                ),
-              ),
-              CustomTextfieldWithIcon(
-                text: 'Title',
-                icon: Icons.photo,
-              ),
-              CustomTextfieldWithIcon(
-                text: 'Documents',
-                icon: Icons.file_present,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CheckBoxWithTitle(
-                    title: 'Email',
-                    value: isSingleChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isSingleChecked = value!;
-                      });
-                    },
-                  ),
-                  CheckBoxWithTitle(title: 'App', value: false),
-                  CheckBoxWithTitle(title: 'SMS', value: false),
-                ],
-              ),
-              SizedBox(height: 40),
-              Center(
-                child: Container(
-                  width: 100,
-                  child: PrimaryButton(
-                    // shape: BorderRadius.circular(5),
-                    title: 'Send',
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => CreditorList(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
+              CheckBoxWithTitle(title: 'Email', value: false),
+              CheckBoxWithTitle(title: 'Free', value: false),
+              CheckBoxWithTitle(title: 'SMS', value: false),
             ],
           ),
-        ),
+          Center(
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 45),
+              width: 100,
+              child: PrimaryButton(
+                title: 'Send',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CreditorList(),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -147,6 +144,59 @@ class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
   }
 }
 
+class NotifiactionCustomRow extends StatelessWidget {
+  const NotifiactionCustomRow({
+    Key? key,
+    required this.icon,
+    required this.label,
+    this.contentPadding,
+    this.maxLength,
+  }) : super(key: key);
+  final IconData icon;
+  final String label;
+  final EdgeInsetsGeometry? contentPadding;
+  final int? maxLength;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon),
+        SizedBox(width: 19),
+        Expanded(
+          child: TextField(
+            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+            maxLength: maxLength ?? null,
+            decoration: InputDecoration(
+              contentPadding: contentPadding,
+              label: Text('$label'),
+              labelStyle: TextStyle(
+                fontSize: 16,
+                color: Color(0xff7A7A7A),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xffE0E0E0),
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xffE0E0E0),
+                ),
+              ),
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xffE0E0E0),
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
 class CheckBoxWithTitle extends StatelessWidget {
   const CheckBoxWithTitle({
     Key? key,
@@ -165,6 +215,9 @@ class CheckBoxWithTitle extends StatelessWidget {
         Transform.scale(
           scale: 0.7,
           child: Checkbox(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
             value: value,
             onChanged: onChanged,
           ),
@@ -175,42 +228,42 @@ class CheckBoxWithTitle extends StatelessWidget {
   }
 }
 
-class CustomTextfieldWithIcon extends StatelessWidget {
-  const CustomTextfieldWithIcon({
-    Key? key,
-    required this.text,
-    required this.icon,
-  }) : super(key: key);
+// class CustomTextfieldWithIcon extends StatelessWidget {
+//   const CustomTextfieldWithIcon({
+//     Key? key,
+//     required this.text,
+//     required this.icon,
+//   }) : super(key: key);
 
-  final String text;
-  final IconData icon;
+//   final String text;
+//   final IconData icon;
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Icon(
-              icon,
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: Container(
-              child: TextField(
-                maxLength: 10,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.zero,
-                    labelText: text,
-                    counterText: ''),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 8.0),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.start,
+//         children: [
+//           Expanded(
+//             child: Icon(
+//               icon,
+//             ),
+//           ),
+//           Expanded(
+//             flex: 4,
+//             child: Container(
+//               child: TextField(
+//                 maxLength: 10,
+//                 decoration: InputDecoration(
+//                     contentPadding: EdgeInsets.zero,
+//                     labelText: text,
+//                     counterText: ''),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

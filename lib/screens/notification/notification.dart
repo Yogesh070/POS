@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/controller/notificationcontroller.dart';
 import 'package:pos/screens/addclients/addclients.dart';
+import 'package:pos/screens/notificationcreditors/add_notification_creaditors.dart';
 import 'package:pos/utilities/constant.dart';
 import 'package:provider/provider.dart';
 
@@ -16,90 +18,89 @@ class AddNotification extends StatelessWidget {
   Widget build(BuildContext context) {
     var _con = Provider.of<NotificationController>(context);
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Column(
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+        children: [
+          GestureDetector(
+            onTap: () {
+              _showSelectImageDailoge(context, _con);
+            },
+            child: DottedBorder(
+              dashPattern: [10, 10],
+              color: _con.image != null ? Colors.transparent : Colors.black,
+              child: Container(
+                width: double.infinity,
+                height: 130,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                child: _con.image == null
+                    ? Center(
+                        child: Text('+ Add Image'),
+                      )
+                    : Image(
+                        image: FileImage(
+                          File(_con.image!.path),
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 23.0),
+            child: NotifiactionCustomRow(
+              icon: Icons.title,
+              label: "Title",
+            ),
+          ),
+          NotifiactionCustomRow(
+            icon: Icons.file_present,
+            label: "Discription",
+            maxLength: 160,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap: () {
-                  _showSelectImageDailoge(context, _con);
+              CheckBoxWithTitle(
+                title: 'All',
+                value: _con.allNotification[0].value,
+                onChanged: (value) {
+                  _con.isCheckAll(value);
                 },
-                child: Container(
-                  margin: EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                    color: Color(0xffF4F4F4),
-                    border: Border.all(
-                      width: 0.1,
-                      style: BorderStyle.solid,
-                    ),
-                  ),
-                  height: MediaQuery.of(context).size.height * 0.20,
-                  width: double.infinity,
-                  child: _con.image == null
-                      ? Center(
-                          child: Text('+ Add Image'),
-                        )
-                      : Image(
-                          image: FileImage(
-                            File(_con.image!.path),
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                ),
               ),
-              CustomTextfieldWithIcon(
-                text: 'Title',
-                icon: Icons.photo,
-              ),
-              CustomTextfieldWithIcon(
-                text: 'Documents',
-                icon: Icons.file_present,
-              ),
-              boxHeight,
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CheckBoxWithTitle(
-                    title: 'All',
-                    value: _con.allNotification[0].value,
+                children: List.generate(_con.notification.length, (index) {
+                  return CheckBoxWithTitle(
+                    title: '${_con.notification[index].title}',
+                    value: _con.notification[index].value,
                     onChanged: (value) {
-                      _con.isCheckAll(value);
+                      _con.isSingleCheck(index, value);
                     },
-                  ),
-                  Row(
-                    children: List.generate(_con.notification.length, (index) {
-                      return CheckBoxWithTitle(
-                        title: '${_con.notification[index].title}',
-                        value: _con.notification[index].value,
-                        onChanged: (value) {
-                          _con.isSingleCheck(index, value);
-                        },
-                      );
-                    }),
-                  ),
-                ],
-              ),
-              SizedBox(height: 40),
-              Center(
-                child: Container(
-                  width: 100,
-                  child: PrimaryButton(
-                    title: 'Send',
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => AddClient(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                  );
+                }),
               ),
             ],
           ),
-        ),
+          Center(
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 45),
+              width: 100,
+              child: PrimaryButton(
+                title: 'Send',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => AddClient(),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -158,42 +159,42 @@ class CheckBoxWithTitle extends StatelessWidget {
   }
 }
 
-class CustomTextfieldWithIcon extends StatelessWidget {
-  const CustomTextfieldWithIcon({
-    Key? key,
-    required this.text,
-    required this.icon,
-  }) : super(key: key);
+// class CustomTextfieldWithIcon extends StatelessWidget {
+//   const CustomTextfieldWithIcon({
+//     Key? key,
+//     required this.text,
+//     required this.icon,
+//   }) : super(key: key);
 
-  final String text;
-  final IconData icon;
+//   final String text;
+//   final IconData icon;
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Icon(
-              icon,
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: Container(
-              child: TextField(
-                maxLength: 10,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.zero,
-                  labelText: text,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 8.0),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.start,
+//         children: [
+//           Expanded(
+//             child: Icon(
+//               icon,
+//             ),
+//           ),
+//           Expanded(
+//             flex: 4,
+//             child: Container(
+//               child: TextField(
+//                 maxLength: 10,
+//                 decoration: InputDecoration(
+//                   contentPadding: EdgeInsets.zero,
+//                   labelText: text,
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
