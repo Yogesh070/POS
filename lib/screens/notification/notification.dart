@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pos/components/primary_button.dart';
@@ -8,18 +9,8 @@ import 'package:pos/screens/addclients/addclients.dart';
 import 'package:pos/utilities/constant.dart';
 import 'package:provider/provider.dart';
 
-class AddNotification extends StatefulWidget {
+class AddNotification extends StatelessWidget {
   const AddNotification({Key? key}) : super(key: key);
-
-  @override
-  _AddNotificationState createState() => _AddNotificationState();
-}
-
-class _AddNotificationState extends State<AddNotification> {
-  final ImagePicker _picker = ImagePicker();
-  XFile? _imageFile;
-
-  bool isSingleChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,31 +22,32 @@ class _AddNotificationState extends State<AddNotification> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                margin: EdgeInsets.all(25),
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.20,
-                decoration: BoxDecoration(
-                  color: Color(0xffF4F4F4),
-                  border: Border.all(
-                    width: 0.1,
-                    style: BorderStyle.solid,
+              GestureDetector(
+                onTap: () {
+                  _showSelectImageDailoge(context, _con);
+                },
+                child: Container(
+                  margin: EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Color(0xffF4F4F4),
+                    border: Border.all(
+                      width: 0.1,
+                      style: BorderStyle.solid,
+                    ),
                   ),
-                ),
-                child: _imageFile == null
-                    ? Center(
-                        child: TextButton(
-                          style: TextButton.styleFrom(primary: Colors.black),
-                          onPressed: () {
-                            takePhoto(ImageSource.gallery);
-                          },
+                  height: MediaQuery.of(context).size.height * 0.20,
+                  width: double.infinity,
+                  child: _con.image == null
+                      ? Center(
                           child: Text('+ Add Image'),
+                        )
+                      : Image(
+                          image: FileImage(
+                            File(_con.image!.path),
+                          ),
+                          fit: BoxFit.cover,
                         ),
-                      )
-                    : Image.file(
-                        File(_imageFile!.path),
-                        fit: BoxFit.cover,
-                      ),
+                ),
               ),
               CustomTextfieldWithIcon(
                 text: 'Title',
@@ -112,13 +104,29 @@ class _AddNotificationState extends State<AddNotification> {
     );
   }
 
-  void takePhoto(ImageSource source) async {
-    final _pickedFile = await _picker.pickImage(
-      source: source,
+  void _showSelectImageDailoge(context, NotificationController _con) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return CupertinoActionSheet(
+          title: Text('Add photo'),
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: () {
+                _con.handleImage(source: ImageSource.camera, context: context);
+              },
+              child: Text('Take photo'),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () {
+                _con.handleImage(source: ImageSource.gallery, context: context);
+              },
+              child: Text('Choose from Gallery'),
+            ),
+          ],
+        );
+      },
     );
-    setState(() {
-      _imageFile = _pickedFile;
-    });
   }
 }
 

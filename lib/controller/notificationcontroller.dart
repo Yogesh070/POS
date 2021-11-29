@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NotificationController extends ChangeNotifier {
   final List<CheckNotificationModel> notification = [
@@ -23,6 +24,19 @@ class NotificationController extends ChangeNotifier {
     allNotification.first.value = value!;
     notification.forEach((notification) => notification.value = value);
     notifyListeners();
+  }
+
+  XFile? image;
+
+  Future handleImage({required ImageSource source, context}) async {
+    Navigator.pop(context);
+
+    XFile? imageFile = await ImagePicker().pickImage(source: source);
+
+    if (imageFile != null) {
+      image = imageFile;
+      notifyListeners();
+    }
   }
 }
 

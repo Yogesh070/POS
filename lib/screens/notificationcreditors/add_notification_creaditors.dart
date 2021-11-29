@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pos/components/primary_button.dart';
@@ -14,8 +15,7 @@ class AddNotificationCreditors extends StatefulWidget {
 }
 
 class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
-  final ImagePicker _picker = ImagePicker();
-  XFile? _imageFile;
+  XFile? _image;
 
   bool isSingleChecked = false;
 
@@ -34,37 +34,32 @@ class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                margin: EdgeInsets.all(25),
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.20,
-                decoration: BoxDecoration(
-                  color: Color(0xffF4F4F4),
-                  border: Border.all(
-                    width: 0.1,
-                    style: BorderStyle.solid,
+              GestureDetector(
+                onTap: () {
+                  _showSelectImageDailoge();
+                },
+                child: Container(
+                  margin: EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Color(0xffF4F4F4),
+                    border: Border.all(
+                      width: 0.1,
+                      style: BorderStyle.solid,
+                    ),
                   ),
-                ),
-                // _imageFile == null
-                //   ? Container()
-                //   : Image.file(
-                //       File(_imageFile!.path),
-                //       fit: BoxFit.cover,
-                //     ),
-                child: _imageFile == null
-                    ? Center(
-                        child: TextButton(
-                          style: TextButton.styleFrom(primary: Colors.black),
-                          onPressed: () {
-                            takePhoto(ImageSource.gallery);
-                          },
+                  height: MediaQuery.of(context).size.height * 0.20,
+                  width: double.infinity,
+                  child: _image == null
+                      ? Center(
                           child: Text('+ Add Image'),
+                        )
+                      : Image(
+                          image: FileImage(
+                            File(_image!.path),
+                          ),
+                          fit: BoxFit.cover,
                         ),
-                      )
-                    : Image.file(
-                        File(_imageFile!.path),
-                        fit: BoxFit.cover,
-                      ),
+                ),
               ),
               CustomTextfieldWithIcon(
                 text: 'Title',
@@ -114,13 +109,41 @@ class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
     );
   }
 
-  void takePhoto(ImageSource source) async {
-    final _pickedFile = await _picker.pickImage(
-      source: source,
+  void _showSelectImageDailoge() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return CupertinoActionSheet(
+          title: Text('Add photo'),
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: () {
+                _handleImage(source: ImageSource.camera);
+              },
+              child: Text('Take photo'),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () {
+                _handleImage(source: ImageSource.gallery);
+              },
+              child: Text('Choose from Gallery'),
+            ),
+          ],
+        );
+      },
     );
-    setState(() {
-      _imageFile = _pickedFile;
-    });
+  }
+
+  void _handleImage({required ImageSource source}) async {
+    Navigator.pop(context);
+
+    XFile? imageFile = await ImagePicker().pickImage(source: source);
+
+    if (imageFile != null) {
+      setState(() {
+        _image = imageFile;
+      });
+    }
   }
 }
 
