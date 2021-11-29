@@ -12,6 +12,16 @@ class RecieptScreen extends StatelessWidget {
     var _reciept = Provider.of<TicketProvider>(context);
     return Scaffold(
       backgroundColor: Color(0xffF4F4F4),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print("Receipt Added");
+        },
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Color(0xff30B700),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
