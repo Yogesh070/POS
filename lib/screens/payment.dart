@@ -131,9 +131,8 @@ class AlertDialogeComponent extends StatefulWidget {
 
 class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
   final TextEditingController _paymentTypeName = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
-  // XFile? _imageFile;
-  XFile? file;
+
+  XFile? _imageFile;
   Uint8List webImage = Uint8List(10);
 
   @override
@@ -191,7 +190,7 @@ class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
               ),
               onPressed: takeImage,
               // onPressed: () {
-              //   //lll
+
               //   showModalBottomSheet(
               //     context: context,
               //     builder: (builder) => bottomSheet(context),
@@ -224,7 +223,7 @@ class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
             child: Container(
               height: 80.0,
               width: 80.0,
-              child: file == null
+              child: _imageFile == null
                   ? Container()
                   : (kIsWeb)
                       ? Image.memory(
@@ -232,7 +231,7 @@ class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
                           fit: BoxFit.cover,
                         )
                       : Image.file(
-                          File(file!.path),
+                          File(_imageFile!.path),
                           fit: BoxFit.cover,
                         ),
             ),
@@ -282,7 +281,7 @@ class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
                                 fit: BoxFit.contain,
                               )
                             : Image.file(
-                                File(file!.path),
+                                File(_imageFile!.path),
                               ),
                         false,
                       ),
@@ -306,17 +305,16 @@ class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
   }
 
   takeImage() async {
+    // using kIsWeb to detect if it is runmning in web or not
     // MOBILE
     if (!kIsWeb) {
       final ImagePicker _picker = ImagePicker();
       XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
-        // var selected = XFile(image.path);
-
         setState(() {
-          file = XFile(image.path);
-          print(file!.path.toString());
+          _imageFile = XFile(image.path);
+          print(_imageFile!.path.toString());
         });
       }
     }
@@ -327,7 +325,7 @@ class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
       if (image != null) {
         var f = await image.readAsBytes();
         setState(() {
-          file = XFile(image.path);
+          _imageFile = XFile(image.path);
           webImage = f;
         });
       }

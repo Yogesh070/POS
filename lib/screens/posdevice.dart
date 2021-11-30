@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pos/screens/widgets/mobile_tile.dart';
 
 class PosDeviceScreen extends StatelessWidget {
   const PosDeviceScreen({Key? key}) : super(key: key);
