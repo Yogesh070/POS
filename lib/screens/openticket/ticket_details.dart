@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/controller/ticket.dart';
+import 'package:pos/screens/payment/paymentmethod.dart';
 import 'package:pos/screens/widgets/menu_items.dart';
 
 import 'package:provider/provider.dart';
@@ -155,7 +156,11 @@ class TicketDetail extends StatelessWidget {
                   Expanded(
                     child: PrimaryButton(
                       title: 'Procced to Pay',
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => PaymentMethod(),
+                        ));
+                      },
                       padding: EdgeInsets.symmetric(vertical: 20),
                     ),
                   ),

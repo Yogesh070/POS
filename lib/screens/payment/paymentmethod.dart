@@ -19,6 +19,9 @@ class PaymentMethod extends StatelessWidget {
         ),
         actions: [
           TextButton(
+            style: TextButton.styleFrom(
+              primary: Color(0xff30B700),
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -27,7 +30,10 @@ class PaymentMethod extends StatelessWidget {
                 ),
               );
             },
-            child: Text('Split'),
+            child: Text(
+              'Split',
+              style: TextStyle(fontSize: 16),
+            ),
           ),
         ],
       ),

@@ -25,8 +25,14 @@ class TicketsScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
+            style: TextButton.styleFrom(
+              primary: Color(0xff30B700),
+            ),
             onPressed: () {},
-            child: Text('merge'),
+            child: Text(
+              'merge',
+              style: TextStyle(fontSize: 16),
+            ),
           ),
         ],
       ),
