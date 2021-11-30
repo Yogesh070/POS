@@ -71,14 +71,7 @@ class PaymentMethod extends StatelessWidget {
                     backgroundImage: AssetImage("assets/images/credit.jpg"),
                   ),
                   title: Text('Card'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PaymentScreen(),
-                      ),
-                    );
-                  },
+                  onTap: () {},
                 ),
                 Divider(
                   thickness: 1,
