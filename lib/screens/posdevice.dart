@@ -37,11 +37,17 @@ class PosDeviceScreen extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.circle,
-                  size: 8,
-                  color: index.isEven ? Color(0xff30B700) : Colors.black,
-                ),
+                index.isEven
+                    ? Icon(
+                        Icons.circle,
+                        size: 8,
+                        color: Color(0xff30B700),
+                      )
+                    : Icon(
+                        Icons.circle_outlined,
+                        size: 8,
+                        color: Color(0xff707070),
+                      ),
                 SizedBox(width: 8),
                 index.isEven ? Text('Active ') : Text('InActive'),
               ],
