@@ -11,8 +11,17 @@ class PaymentMethod extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+          child: Icon(Icons.arrow_back_ios_new),
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           TextButton(
+            style: TextButton.styleFrom(
+              primary: Color(0xff30B700),
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -21,7 +30,10 @@ class PaymentMethod extends StatelessWidget {
                 ),
               );
             },
-            child: Text('Split'),
+            child: Text(
+              'Split',
+              style: TextStyle(fontSize: 16),
+            ),
           ),
         ],
       ),
@@ -59,14 +71,7 @@ class PaymentMethod extends StatelessWidget {
                     backgroundImage: AssetImage("assets/images/credit.jpg"),
                   ),
                   title: Text('Card'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PaymentScreen(),
-                      ),
-                    );
-                  },
+                  onTap: () {},
                 ),
                 Divider(
                   thickness: 1,

@@ -10,7 +10,6 @@ class CompleteActionPayment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 30,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -121,6 +120,7 @@ class CustomColumn extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        SizedBox(height: 2),
         Text(
           title,
           style: TextStyle(

@@ -15,19 +15,32 @@ class MenuItemText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Text(itemName),
-              Text(' x$itemQuantity'),
-            ],
-          ),
-          Text('Rs. $itemRate'),
-        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Text(
+                  itemName,
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(width: 8),
+                Text(
+                  ' x $itemQuantity',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Text('Rs. $itemRate'),
+          ],
+        ),
       ),
     );
   }

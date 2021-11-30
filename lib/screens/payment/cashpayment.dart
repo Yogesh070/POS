@@ -12,7 +12,6 @@ class CashPayment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 30,
         title: Text(
           'Cash Payment',
           style: TextStyle(
@@ -42,39 +41,41 @@ class CashPayment extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            heightFactor: 2.5,
-            child: CustomColumn(rate: 'Rs. 220.00', title: 'Total Amount'),
-          ),
-          boxHeight,
-          Text(
-            'Cash Recieved',
-            style: TextStyle(
-              fontSize: 14,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CustomColumn(rate: 'Rs. 220.00', title: 'Total Amount'),
             ),
-          ),
-          AddTextField(hintText: '250.00'),
-          Center(
-            heightFactor: 3.5,
-            child: SizedBox(
-              width: 104,
-              height: 37,
-              child: PrimaryButton(
-                title: 'Confirm',
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CompleteActionPayment(),
-                    ),
-                  );
-                },
+            boxHeight,
+            Text(
+              'Cash Recieved',
+              style: TextStyle(
+                fontSize: 14,
               ),
             ),
-          )
-        ],
+            AddTextField(hintText: '250.00'),
+            Center(
+              heightFactor: 3.5,
+              child: SizedBox(
+                width: 104,
+                height: 37,
+                child: PrimaryButton(
+                  title: 'Confirm',
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CompleteActionPayment(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

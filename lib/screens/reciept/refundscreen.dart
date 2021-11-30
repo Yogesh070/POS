@@ -13,7 +13,6 @@ class RefundScreen extends StatelessWidget {
     var _controller = Provider.of<TicketProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 30,
         title: Text(
           'Refund',
           style: TextStyle(color: Colors.black),

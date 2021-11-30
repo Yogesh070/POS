@@ -17,6 +17,12 @@ class AddClient extends StatelessWidget {
           'Add Clients',
           style: TextStyle(color: Colors.black),
         ),
+        leading: GestureDetector(
+          child: Icon(Icons.arrow_back_ios_new),
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           CreditorMenuItems(),
         ],

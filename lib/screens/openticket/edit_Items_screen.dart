@@ -14,7 +14,27 @@ class EditItemScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var _controller = Provider.of<TicketProvider>(context);
     return Scaffold(
-      appBar: appbar(context, _controller),
+      appBar: AppBar(
+        title: Text(
+          '${_controller.itemsOrdered[index].itemName}',
+          style: TextStyle(color: Colors.black),
+        ),
+        leading: GestureDetector(
+          child: Icon(Icons.arrow_back_ios_new),
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {},
+            style: TextButton.styleFrom(
+              primary: Color(0xff30B700),
+            ),
+            child: Text('Save Changes'),
+          )
+        ],
+      ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints viewportConstraints) {
           return SingleChildScrollView(
@@ -40,17 +60,21 @@ class EditItemScreen extends StatelessWidget {
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           ),
                           TextField(
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
+                              constraints: BoxConstraints(maxHeight: 32),
                               border: UnderlineInputBorder(),
                             ),
                           ),
-                          boxHeight,
+                          SizedBox(height: 16),
                           Text('Quantity'),
+                          SizedBox(height: 16),
                           quantity(_controller),
                           boxHeight,
                         ],
                       ),
                     ),
+                    boxHeight,
                     LabelText(labelName: 'AddsOn'),
                     boxHeight,
                     divider,
@@ -90,31 +114,6 @@ class EditItemScreen extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  AppBar appbar(BuildContext context, TicketProvider _controller) {
-    return AppBar(
-      leadingWidth: 30,
-      leading: IconButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        icon: Icon(Icons.arrow_back_ios_new),
-      ),
-      title: Text(
-        '${_controller.itemsOrdered[index].itemName}',
-        style: TextStyle(color: Colors.black),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            primary: Color(0xff30B700),
-          ),
-          child: Text('Save Changes'),
-        )
-      ],
     );
   }
 

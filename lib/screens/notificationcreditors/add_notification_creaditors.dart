@@ -1,9 +1,15 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pos/components/primary_button.dart';
-import 'package:pos/screens/notificationcreditors/creditor_list.dart';
+
+import 'creditor_list.dart';
 
 class AddNotificationCreditors extends StatefulWidget {
   const AddNotificationCreditors({Key? key}) : super(key: key);
@@ -14,8 +20,8 @@ class AddNotificationCreditors extends StatefulWidget {
 }
 
 class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
-  final ImagePicker _picker = ImagePicker();
-  XFile? _imageFile;
+  XFile? file;
+  Uint8List webImage = Uint8List(10);
 
   bool isSingleChecked = false;
 
@@ -27,100 +33,208 @@ class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
           'Add Notification',
           style: TextStyle(color: Colors.black),
         ),
+        leading: GestureDetector(
+          child: Icon(Icons.arrow_back_ios_new),
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.all(25),
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.20,
+      body: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+        children: [
+          GestureDetector(
+            onTap: uploadImage,
+            child: DottedBorder(
+              dashPattern: [10, 10],
+              color: file != null ? Colors.transparent : Colors.black,
+              child: Container(
+                alignment: Alignment.center,
+                height: 180,
                 decoration: BoxDecoration(
-                  color: Color(0xffF4F4F4),
-                  border: Border.all(
-                    width: 0.1,
-                    style: BorderStyle.solid,
-                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  color: file == null ? Colors.white : Colors.transparent,
                 ),
-                // _imageFile == null
-                //   ? Container()
-                //   : Image.file(
-                //       File(_imageFile!.path),
-                //       fit: BoxFit.cover,
-                //     ),
-                child: _imageFile == null
+                child: file == null
                     ? Center(
-                        child: TextButton(
-                          style: TextButton.styleFrom(primary: Colors.black),
-                          onPressed: () {
-                            takePhoto(ImageSource.gallery);
-                          },
-                          child: Text('+ Add Image'),
+                        child: Text(
+                          '+ Add Image',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
                       )
-                    : Image.file(
-                        File(_imageFile!.path),
-                        fit: BoxFit.cover,
-                      ),
+                    : (kIsWeb)
+                        ? Image.memory(
+                            webImage,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.file(
+                            File(file!.path),
+                            fit: BoxFit.cover,
+                          ),
               ),
-              CustomTextfieldWithIcon(
-                text: 'Title',
-                icon: Icons.photo,
-              ),
-              CustomTextfieldWithIcon(
-                text: 'Documents',
-                icon: Icons.file_present,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CheckBoxWithTitle(
-                    title: 'Email',
-                    value: isSingleChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isSingleChecked = value!;
-                      });
-                    },
-                  ),
-                  CheckBoxWithTitle(title: 'App', value: false),
-                  CheckBoxWithTitle(title: 'SMS', value: false),
-                ],
-              ),
-              SizedBox(height: 40),
-              Center(
-                child: Container(
-                  width: 100,
-                  child: PrimaryButton(
-                    // shape: BorderRadius.circular(5),
-                    title: 'Send',
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => CreditorList(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 23.0),
+            child: NotifiactionCustomRow(
+              icon: Icons.title,
+              label: "Title",
+            ),
+          ),
+          NotifiactionCustomRow(
+            icon: Icons.file_present,
+            label: "Discription",
+            maxLength: 160,
+          ),
+          SizedBox(height: 32),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CheckBoxWithTitle(title: 'Email', value: false),
+              SizedBox(width: 8),
+              CheckBoxWithTitle(title: 'Free', value: false),
+              SizedBox(width: 8),
+              CheckBoxWithTitle(title: 'SMS', value: false),
             ],
           ),
-        ),
+          Center(
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 45),
+              width: 100,
+              child: PrimaryButton(
+                title: 'Send',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CreditorList(),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  void takePhoto(ImageSource source) async {
-    final _pickedFile = await _picker.pickImage(
-      source: source,
+  uploadImage() async {
+    // MOBILE
+    if (!kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
+        // var selected = XFile(image.path);
+
+        setState(() {
+          file = XFile(image.path);
+        });
+      }
+    }
+    // WEB
+    else if (kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        var f = await image.readAsBytes();
+
+        setState(() {
+          file = XFile(image.path);
+          webImage = f;
+        });
+      }
+    }
+  }
+
+  // void _showSelectImageDailoge() {
+  //   showCupertinoModalPopup(
+  //     context: context,
+  //     builder: (context) {
+  //       return CupertinoActionSheet(
+  //         title: Text('Add photo'),
+  //         actions: [
+  //           CupertinoActionSheetAction(
+  //             onPressed: () {
+  //               _handleImage(source: ImageSource.camera);
+  //             },
+  //             child: Text('Take photo'),
+  //           ),
+  //           CupertinoActionSheetAction(
+  //             onPressed: () {
+  //               _handleImage(source: ImageSource.gallery);
+  //             },
+  //             child: Text('Choose from Gallery'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
+  // void _handleImage({required ImageSource source}) async {
+  //   Navigator.pop(context);
+
+  //   XFile? imageFile = await ImagePicker().pickImage(source: source);
+
+  //   if (imageFile != null) {
+  //     setState(() {
+  //       _image = imageFile;
+  //     });
+  //   }
+  // }
+}
+
+class NotifiactionCustomRow extends StatelessWidget {
+  const NotifiactionCustomRow({
+    Key? key,
+    required this.icon,
+    required this.label,
+    this.contentPadding,
+    this.maxLength,
+  }) : super(key: key);
+  final IconData icon;
+  final String label;
+  final EdgeInsetsGeometry? contentPadding;
+  final int? maxLength;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon),
+        SizedBox(width: 19),
+        Expanded(
+          child: TextField(
+            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+            maxLength: maxLength ?? null,
+            decoration: InputDecoration(
+              contentPadding: contentPadding,
+              label: Text('$label'),
+              labelStyle: TextStyle(
+                fontSize: 16,
+                color: Color(0xff7A7A7A),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xffE0E0E0),
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xffE0E0E0),
+                ),
+              ),
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xffE0E0E0),
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
     );
-    setState(() {
-      _imageFile = _pickedFile;
-    });
   }
 }
 
@@ -142,52 +256,15 @@ class CheckBoxWithTitle extends StatelessWidget {
         Transform.scale(
           scale: 0.7,
           child: Checkbox(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
             value: value,
             onChanged: onChanged,
           ),
         ),
         Text(title),
       ],
-    );
-  }
-}
-
-class CustomTextfieldWithIcon extends StatelessWidget {
-  const CustomTextfieldWithIcon({
-    Key? key,
-    required this.text,
-    required this.icon,
-  }) : super(key: key);
-
-  final String text;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Icon(
-              icon,
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: Container(
-              child: TextField(
-                maxLength: 10,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.zero,
-                    labelText: text,
-                    counterText: ''),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
