@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pos/controller/payment_controller.dart';
@@ -130,7 +132,9 @@ class AlertDialogeComponent extends StatefulWidget {
 class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
   final TextEditingController _paymentTypeName = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  XFile? _imageFile;
+  // XFile? _imageFile;
+  XFile? file;
+  Uint8List webImage = Uint8List(10);
 
   @override
   Widget build(BuildContext context) {
@@ -185,12 +189,14 @@ class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
                   ),
                 ),
               ),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (builder) => bottomSheet(context),
-                );
-              },
+              onPressed: takeImage,
+              // onPressed: () {
+              //   //lll
+              //   showModalBottomSheet(
+              //     context: context,
+              //     builder: (builder) => bottomSheet(context),
+              //   );
+              // },
               child: Row(
                 children: [
                   Icon(
@@ -218,12 +224,17 @@ class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
             child: Container(
               height: 80.0,
               width: 80.0,
-              child: _imageFile == null
+              child: file == null
                   ? Container()
-                  : Image.file(
-                      File(_imageFile!.path),
-                      fit: BoxFit.cover,
-                    ),
+                  : (kIsWeb)
+                      ? Image.memory(
+                          webImage,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.file(
+                          File(file!.path),
+                          fit: BoxFit.cover,
+                        ),
             ),
           )
         ],
@@ -265,9 +276,14 @@ class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
                     paymentNotifier.addPayment(
                       PaymentModel(
                         _paymentTypeName.text,
-                        Image.file(
-                          File(_imageFile!.path),
-                        ),
+                        kIsWeb
+                            ? Image.memory(
+                                webImage,
+                                fit: BoxFit.contain,
+                              )
+                            : Image.file(
+                                File(file!.path),
+                              ),
                         false,
                       ),
                     );
@@ -289,100 +305,129 @@ class _AlertDialogeComponentState extends State<AlertDialogeComponent> {
     );
   }
 
-  void takePhoto(ImageSource source) async {
-    final _pickedFile = await _picker.pickImage(
-      source: source,
-    );
-    setState(() {
-      _imageFile = _pickedFile;
-    });
+  takeImage() async {
+    // MOBILE
+    if (!kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
+        // var selected = XFile(image.path);
+
+        setState(() {
+          file = XFile(image.path);
+          print(file!.path.toString());
+        });
+      }
+    }
+    // WEB
+    else if (kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        var f = await image.readAsBytes();
+        setState(() {
+          file = XFile(image.path);
+          webImage = f;
+        });
+      }
+    }
   }
 
-  Widget bottomSheet(BuildContext context) {
-    return Container(
-      height: 100.0,
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 20,
-      ),
-      child: Column(
-        children: [
-          Text(
-            "Choose image",
-            style: TextStyle(
-              fontSize: 20.0,
-            ),
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    Colors.grey.shade300,
-                  ),
-                ),
-                onPressed: () {
-                  takePhoto(ImageSource.camera);
-                  Navigator.pop(context);
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.camera_alt,
-                      color: Colors.black,
-                    ),
-                    SizedBox(
-                      width: 7.0,
-                    ),
-                    Text(
-                      'Camera',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.black,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Spacer(),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    Colors.grey.shade300,
-                  ),
-                ),
-                onPressed: () {
-                  takePhoto(ImageSource.gallery);
-                  Navigator.pop(context);
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.image,
-                      color: Colors.black,
-                    ),
-                    SizedBox(
-                      width: 7.0,
-                    ),
-                    Text(
-                      'Gallery',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.black,
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
+  // void takePhoto(ImageSource source) async {
+  //   final _pickedFile = await _picker.pickImage(
+  //     source: source,
+  //   );
+  //   setState(() {
+  //     _imageFile = _pickedFile;
+  //   });
+  // }
+
+  // Widget bottomSheet(BuildContext context) {
+  //   return Container(
+  //     height: 100.0,
+  //     width: MediaQuery.of(context).size.width,
+  //     margin: EdgeInsets.symmetric(
+  //       horizontal: 20,
+  //       vertical: 20,
+  //     ),
+  //     child: Column(
+  //       children: [
+  //         Text(
+  //           "Choose image",
+  //           style: TextStyle(
+  //             fontSize: 20.0,
+  //           ),
+  //         ),
+  //         SizedBox(
+  //           height: 20.0,
+  //         ),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           children: [
+  //             ElevatedButton(
+  //               style: ButtonStyle(
+  //                 backgroundColor: MaterialStateProperty.all<Color>(
+  //                   Colors.grey.shade300,
+  //                 ),
+  //               ),
+  //               onPressed: () {
+  //                 takePhoto(ImageSource.camera);
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Row(
+  //                 children: [
+  //                   Icon(
+  //                     Icons.camera_alt,
+  //                     color: Colors.black,
+  //                   ),
+  //                   SizedBox(
+  //                     width: 7.0,
+  //                   ),
+  //                   Text(
+  //                     'Camera',
+  //                     style: TextStyle(
+  //                       fontSize: 16.0,
+  //                       color: Colors.black,
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //             Spacer(),
+  //             ElevatedButton(
+  //               style: ButtonStyle(
+  //                 backgroundColor: MaterialStateProperty.all<Color>(
+  //                   Colors.grey.shade300,
+  //                 ),
+  //               ),
+  //               onPressed: () {
+  //                 takePhoto(ImageSource.gallery);
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Row(
+  //                 children: [
+  //                   Icon(
+  //                     Icons.image,
+  //                     color: Colors.black,
+  //                   ),
+  //                   SizedBox(
+  //                     width: 7.0,
+  //                   ),
+  //                   Text(
+  //                     'Gallery',
+  //                     style: TextStyle(
+  //                       fontSize: 16.0,
+  //                       color: Colors.black,
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             )
+  //           ],
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 }

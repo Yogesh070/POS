@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -25,16 +28,35 @@ class NotificationController extends ChangeNotifier {
     notifyListeners();
   }
 
-  XFile? image;
+// uploading image
 
-  Future handleImage({required ImageSource source, context}) async {
-    Navigator.pop(context);
+  XFile? file;
+  Uint8List webImage = Uint8List(10);
 
-    XFile? imageFile = await ImagePicker().pickImage(source: source);
+  uploadImage() async {
+    // MOBILE
+    if (!kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
-    if (imageFile != null) {
-      image = imageFile;
-      notifyListeners();
+      if (image != null) {
+        // var selected = XFile(image.path);
+
+        file = XFile(image.path);
+        notifyListeners();
+      }
+    }
+    // WEB
+    else if (kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        var f = await image.readAsBytes();
+
+        file = XFile(image.path);
+        webImage = f;
+        notifyListeners();
+      }
     }
   }
 }

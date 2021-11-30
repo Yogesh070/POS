@@ -145,8 +145,7 @@ class TicketDetail extends StatelessWidget {
                   Expanded(
                     child: PrimaryButton(
                       title: 'Save Order',
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+                      padding: EdgeInsets.symmetric(vertical: 20),
                       onPressed: () {},
                     ),
                   ),
@@ -157,8 +156,7 @@ class TicketDetail extends StatelessWidget {
                     child: PrimaryButton(
                       title: 'Procced to Pay',
                       onPressed: () {},
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+                      padding: EdgeInsets.symmetric(vertical: 20),
                     ),
                   ),
                   // PrimaryButton(

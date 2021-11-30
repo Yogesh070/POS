@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,7 +20,8 @@ class AddNotificationCreditors extends StatefulWidget {
 }
 
 class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
-  XFile? _image;
+  XFile? file;
+  Uint8List webImage = Uint8List(10);
 
   bool isSingleChecked = false;
 
@@ -41,26 +44,33 @@ class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
         children: [
           GestureDetector(
-            onTap: () {
-              _showSelectImageDailoge();
-            },
+            onTap: uploadImage,
             child: DottedBorder(
               dashPattern: [10, 10],
-              color: _image != null ? Colors.transparent : Colors.black,
+              color: file != null ? Colors.transparent : Colors.black,
               child: Container(
-                width: double.infinity,
-                height: 130,
-                color: Color(0xffF4F4F4),
-                child: _image == null
+                alignment: Alignment.center,
+                height: 180,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: file == null ? Colors.white : Colors.transparent,
+                ),
+                child: file == null
                     ? Center(
-                        child: Text('+ Add Image'),
-                      )
-                    : Image(
-                        image: FileImage(
-                          File(_image!.path),
+                        child: Text(
+                          '+ Add Image',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
-                        fit: BoxFit.cover,
-                      ),
+                      )
+                    : (kIsWeb)
+                        ? Image.memory(
+                            webImage,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.file(
+                            File(file!.path),
+                            fit: BoxFit.cover,
+                          ),
               ),
             ),
           ),
@@ -78,10 +88,12 @@ class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
           ),
           SizedBox(height: 32),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               CheckBoxWithTitle(title: 'Email', value: false),
+              SizedBox(width: 8),
               CheckBoxWithTitle(title: 'Free', value: false),
+              SizedBox(width: 8),
               CheckBoxWithTitle(title: 'SMS', value: false),
             ],
           ),
@@ -106,42 +118,71 @@ class _AddNotificationCreditorsState extends State<AddNotificationCreditors> {
     );
   }
 
-  void _showSelectImageDailoge() {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (context) {
-        return CupertinoActionSheet(
-          title: Text('Add photo'),
-          actions: [
-            CupertinoActionSheetAction(
-              onPressed: () {
-                _handleImage(source: ImageSource.camera);
-              },
-              child: Text('Take photo'),
-            ),
-            CupertinoActionSheetAction(
-              onPressed: () {
-                _handleImage(source: ImageSource.gallery);
-              },
-              child: Text('Choose from Gallery'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  uploadImage() async {
+    // MOBILE
+    if (!kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
-  void _handleImage({required ImageSource source}) async {
-    Navigator.pop(context);
+      if (image != null) {
+        // var selected = XFile(image.path);
 
-    XFile? imageFile = await ImagePicker().pickImage(source: source);
+        setState(() {
+          file = XFile(image.path);
+        });
+      }
+    }
+    // WEB
+    else if (kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        var f = await image.readAsBytes();
 
-    if (imageFile != null) {
-      setState(() {
-        _image = imageFile;
-      });
+        setState(() {
+          file = XFile(image.path);
+          webImage = f;
+        });
+      }
     }
   }
+
+  // void _showSelectImageDailoge() {
+  //   showCupertinoModalPopup(
+  //     context: context,
+  //     builder: (context) {
+  //       return CupertinoActionSheet(
+  //         title: Text('Add photo'),
+  //         actions: [
+  //           CupertinoActionSheetAction(
+  //             onPressed: () {
+  //               _handleImage(source: ImageSource.camera);
+  //             },
+  //             child: Text('Take photo'),
+  //           ),
+  //           CupertinoActionSheetAction(
+  //             onPressed: () {
+  //               _handleImage(source: ImageSource.gallery);
+  //             },
+  //             child: Text('Choose from Gallery'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
+  // void _handleImage({required ImageSource source}) async {
+  //   Navigator.pop(context);
+
+  //   XFile? imageFile = await ImagePicker().pickImage(source: source);
+
+  //   if (imageFile != null) {
+  //     setState(() {
+  //       _image = imageFile;
+  //     });
+  //   }
+  // }
 }
 
 class NotifiactionCustomRow extends StatelessWidget {
@@ -227,43 +268,3 @@ class CheckBoxWithTitle extends StatelessWidget {
     );
   }
 }
-
-// class CustomTextfieldWithIcon extends StatelessWidget {
-//   const CustomTextfieldWithIcon({
-//     Key? key,
-//     required this.text,
-//     required this.icon,
-//   }) : super(key: key);
-
-//   final String text;
-//   final IconData icon;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 8.0),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.start,
-//         children: [
-//           Expanded(
-//             child: Icon(
-//               icon,
-//             ),
-//           ),
-//           Expanded(
-//             flex: 4,
-//             child: Container(
-//               child: TextField(
-//                 maxLength: 10,
-//                 decoration: InputDecoration(
-//                     contentPadding: EdgeInsets.zero,
-//                     labelText: text,
-//                     counterText: ''),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

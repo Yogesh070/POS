@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:pos/components/primary_button.dart';
 import 'package:pos/controller/notificationcontroller.dart';
 import 'package:pos/screens/addclients/addclients.dart';
 import 'package:pos/screens/notificationcreditors/add_notification_creaditors.dart';
-import 'package:pos/utilities/constant.dart';
 import 'package:provider/provider.dart';
 
 class AddNotification extends StatelessWidget {
@@ -22,29 +22,33 @@ class AddNotification extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
         children: [
           GestureDetector(
-            onTap: () {
-              _showSelectImageDailoge(context, _con);
-            },
+            onTap: () => _con.uploadImage(),
             child: DottedBorder(
               dashPattern: [10, 10],
-              color: _con.image != null ? Colors.transparent : Colors.black,
+              color: _con.file != null ? Colors.transparent : Colors.black,
               child: Container(
-                width: double.infinity,
-                height: 130,
+                alignment: Alignment.center,
+                height: 180,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
+                  color: _con.file == null ? Colors.white : Colors.transparent,
                 ),
-                child: _con.image == null
+                child: _con.file == null
                     ? Center(
-                        child: Text('+ Add Image'),
-                      )
-                    : Image(
-                        image: FileImage(
-                          File(_con.image!.path),
+                        child: Text(
+                          '+ Add Image',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
-                        fit: BoxFit.cover,
-                      ),
+                      )
+                    : (kIsWeb)
+                        ? Image.memory(
+                            _con.webImage,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.file(
+                            File(_con.file!.path),
+                            fit: BoxFit.cover,
+                          ),
               ),
             ),
           ),
@@ -102,31 +106,6 @@ class AddNotification extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  void _showSelectImageDailoge(context, NotificationController _con) {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (context) {
-        return CupertinoActionSheet(
-          title: Text('Add photo'),
-          actions: [
-            CupertinoActionSheetAction(
-              onPressed: () {
-                _con.handleImage(source: ImageSource.camera, context: context);
-              },
-              child: Text('Take photo'),
-            ),
-            CupertinoActionSheetAction(
-              onPressed: () {
-                _con.handleImage(source: ImageSource.gallery, context: context);
-              },
-              child: Text('Choose from Gallery'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
