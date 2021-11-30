@@ -5,7 +5,7 @@ import 'package:pos/model/diningModel.dart';
 import 'package:pos/screens/dining.dart';
 import 'package:pos/screens/features.dart';
 import 'package:pos/screens/loayalityscreen/mobile_loyality_screen.dart';
-import 'package:pos/screens/payment/paymentmethod.dart';
+import 'package:pos/screens/payment.dart';
 import 'package:pos/screens/posdevice.dart';
 import 'package:pos/screens/stores.dart';
 import 'package:pos/screens/receipt.dart';
@@ -62,7 +62,7 @@ class SettingController extends ChangeNotifier {
     },
     {
       "title": "Payment",
-      "route": PaymentMethod(),
+      "route": PaymentScreen(),
     },
     {"title": "Loyalty", "route": MobileLoyalityScreen()},
     {
